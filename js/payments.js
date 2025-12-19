@@ -4,6 +4,16 @@
 let web3;
 let userAccount;
 
+// Update wallet display
+function updateWalletDisplay() {
+    const walletInfo = document.getElementById('wallet-info');
+    if (userAccount) {
+        walletInfo.textContent = 'Wallet: ' + userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
+    } else {
+        walletInfo.textContent = 'Wallet: Not connected';
+    }
+}
+
 // Initialize MetaMask connection
 async function initMetaMask() {
     if (typeof window.ethereum !== 'undefined') {
@@ -12,6 +22,7 @@ async function initMetaMask() {
             await window.ethereum.request({ method: 'eth_requestAccounts' });
             const accounts = await web3.eth.getAccounts();
             userAccount = accounts[0];
+            updateWalletDisplay();
             console.log('Connected account:', userAccount);
         } catch (error) {
             console.error('User denied account access');
@@ -104,6 +115,7 @@ async function initWalletConnect() {
         await provider.enable();
         web3 = new Web3(provider);
         userAccount = provider.accounts[0];
+        updateWalletDisplay();
         console.log('Connected via WalletConnect:', userAccount);
     } catch (error) {
         console.error('WalletConnect connection failed:', error);
@@ -123,6 +135,7 @@ async function initCoinbase() {
         await provider.request({ method: 'eth_requestAccounts' });
         web3 = new Web3(provider);
         userAccount = provider.selectedAddress;
+        updateWalletDisplay();
         console.log('Connected via Coinbase Wallet:', userAccount);
     } catch (error) {
         console.error('Coinbase Wallet connection failed:', error);
@@ -131,5 +144,16 @@ async function initCoinbase() {
 
 // Event listeners
 document.getElementById('pay-btn').addEventListener('click', payToPlay);
-document.getElementById('walletconnect-btn').addEventListener('click', initWalletConnect);
-document.getElementById('coinbase-btn').addEventListener('click', initCoinbase);
+document.getElementById('connect-wallet-btn').addEventListener('click', async () => {
+    // Show a prompt or modal to select wallet type
+    const walletType = prompt('Select wallet: metamask, walletconnect, coinbase').toLowerCase();
+    if (walletType === 'metamask') {
+        await initMetaMask();
+    } else if (walletType === 'walletconnect') {
+        await initWalletConnect();
+    } else if (walletType === 'coinbase') {
+        await initCoinbase();
+    } else {
+        alert('Unknown wallet type. Please enter metamask, walletconnect, or coinbase.');
+    }
+});

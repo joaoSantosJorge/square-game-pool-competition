@@ -13,3 +13,7 @@ Build a web-based Flappy Bird game where players pay 2 cents per play via 402 pr
 1. Choose payment method: Stick with 402 + MetaMask or switch to Web Monetization for streaming?
 2. On-chain vs off-chain leaderboard: Use Firebase for simplicity or smart contract for decentralization?
 3. Legal compliance: Add terms for payments and data handling to avoid issues.
+
+
+run command:
+python3 -m http.server 8000
