@@ -65,7 +65,7 @@ async function payToPlay() {
     }
 
     const usdcAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // USDC contract on Base network
-    const recipient = '0x...'; // TODO: Set recipient address
+    const recipient = '0xaF6AA830D01011811f1fBCCD94440a9CA724A722'; // Game developer's address
     const amount = 20000; // 0.02 USDC (6 decimals)
 
     const usdcAbi = [
