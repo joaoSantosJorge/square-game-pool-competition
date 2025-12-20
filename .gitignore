@@ -1,0 +1,30 @@
+# Foundry build and cache
+/out
+/cache
+
+# Node modules (if using npm/yarn for tooling)
+node_modules/
+
+# Foundry libraries
+/lib
+
+# Environment files
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Logs
+*.log
+
+# Solidity coverage
+coverage/
+coverage.json
+
+# Artifacts from other tools
+artifacts/
+build/
