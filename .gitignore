@@ -1,30 +1,34 @@
-# Foundry build and cache
-/out
-/cache
-
-# Node modules (if using npm/yarn for tooling)
+# Node.js
 node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
 
-# Foundry libraries
-/lib
+# Firebase
+.firebase/
+firebase-debug.log
 
-# Environment files
+# Local environment
 .env
+.env.local
 
-# OS generated files
+# Build and output
+out/
+dist/
+build/
+
+# Editor/OS
+.vscode/
 .DS_Store
 Thumbs.db
 
-# VS Code settings
-.vscode/
+# Cache/temp
+cache/
 
-# Logs
-*.log
+# Old smart contract folders
+lib/
+*.sol
 
-# Solidity coverage
-coverage/
-coverage.json
-
-# Artifacts from other tools
-artifacts/
-build/
+# Python
+__pycache__/
+*.pyc

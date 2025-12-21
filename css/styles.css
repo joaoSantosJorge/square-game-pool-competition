@@ -16,8 +16,9 @@ body {
     font-family: 'Courier New', Courier, 'Lucida Console', monospace;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    /* Removed align-items: center to prevent vertical centering */
+    height: auto;
+    min-height: 100vh;
     margin: 0;
     background-color: var(--bg);
     color: var(--fg);
@@ -50,6 +51,8 @@ body.light-mode {
     border-radius: 8px;
     box-shadow: 0 0 24px var(--shadow), 0 0 0 4px var(--bg);
     padding: 32px 32px 24px 32px;
+    margin-top: 0;
+    padding-top: 48px;
     transition: background 0.3s, color 0.3s, border 0.3s;
 }
 
