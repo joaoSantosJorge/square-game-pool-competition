@@ -20,10 +20,10 @@ Owner controls:
 3. winner allocation (1-10 winners)
 
 Happy path:
-1. cycle time ends
-2. request to database, returns 10 best wallet scores
+1. cycle time ends (back-end function),
+2. Back-end sends request to contract with list of winners and percentage alocation.
 3. allocates funds for claim
-4. resets database
+4. back-end resets database
 
 Conditions on claims:
 1. winners have 7 days to claim funds. After that, funds are returned to the prize pool for the next cycle.
