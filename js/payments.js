@@ -76,30 +76,49 @@ async function payToPlay() {
     }
 
     const usdcAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // USDC contract on Base network
-    const recipient = '0xaF6AA830D01011811f1fBCCD94440a9CA724A722'; // Game developer's address
+    const flappyBirdContractAddress = 'YOUR_DEPLOYED_CONTRACT_ADDRESS'; // TODO: Replace with deployed FlappyBirdPrizePool address
     const amount = 20000; // 0.02 USDC (6 decimals)
 
     const usdcAbi = [
         {
             "constant": false,
             "inputs": [
-                {"name": "_to", "type": "address"},
+                {"name": "_spender", "type": "address"},
                 {"name": "_value", "type": "uint256"}
             ],
-            "name": "transfer",
+            "name": "approve",
             "outputs": [{"name": "", "type": "bool"}],
             "type": "function"
         }
     ];
 
+    const flappyBirdAbi = [
+        {
+            "inputs": [],
+            "name": "payToPlay",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ];
+
     const usdcContract = new web3.eth.Contract(usdcAbi, usdcAddress);
+    const flappyBirdContract = new web3.eth.Contract(flappyBirdAbi, flappyBirdContractAddress);
 
     try {
-        await usdcContract.methods.transfer(recipient, amount).send({ from: userAccount });
-        console.log('Payment successful');
+        // First, approve the FlappyBirdPrizePool contract to spend USDC
+        console.log('Approving USDC spend...');
+        await usdcContract.methods.approve(flappyBirdContractAddress, amount).send({ from: userAccount });
+        
+        // Then call payToPlay on the FlappyBirdPrizePool contract
+        console.log('Sending payment to contract...');
+        await flappyBirdContract.methods.payToPlay().send({ from: userAccount });
+        
+        console.log('Payment successful! You can now play the game.');
         // TODO: Enable game after payment
     } catch (error) {
         console.error('Payment failed:', error);
+        alert('Payment failed. Please try again.');
     }
 }
 

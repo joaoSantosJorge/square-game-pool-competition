@@ -1,0 +1,17 @@
+{
+  "name": "flappy-bird-cycle-manager",
+  "version": "1.0.0",
+  "description": "Automated cycle manager for Flappy Bird prize pool allocation",
+  "main": "cycleManager.js",
+  "scripts": {
+    "start": "node cycleManager.js",
+    "dev": "nodemon cycleManager.js"
+  },
+  "dependencies": {
+    "web3": "^4.0.0",
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}

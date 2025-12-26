@@ -161,5 +161,66 @@ contract FlappyBirdPrizePoolTest is Test {
         pool.withdrawETH();
         assertEq(address(pool).balance, 0);
     }
-   
+
+    // test two allocateFunds calls without sweeping
+    function testAllocateFundsTwiceWithoutSweeping() public {
+        vm.startPrank(owner);
+        address[] memory winners = new address[](1);
+        winners[0] = winner1;
+        uint256[] memory percentages = new uint256[](1);
+        percentages[0] = 10000; // 100%
+        uint256 feePercentage = 0; // 0%
+        // Set totalPool directly via cheatcode (slot 2: after owner and usdc)
+        bytes32 slot = bytes32(uint256(2));
+        vm.store(address(pool), slot, bytes32(uint256(5_000_000))); // 5 USDC
+        pool.allocateFunds(feePercentage, winners, percentages);
+        
+        // Attempt to allocate again without sweeping
+        vm.expectRevert("Funds already allocated");
+        pool.allocateFunds(feePercentage, winners, percentages);
+        vm.stopPrank();
+    }
+
+    //test sweepUnclaimed resets fundsAllocated to false
+    function testSweepUnclaimedResetsFundsAllocated() public {
+        vm.startPrank(owner);
+        address[] memory winners = new address[](1);
+        winners[0] = winner1;
+        uint256[] memory percentages = new uint256[](1);
+        percentages[0] = 10000; // 100%
+        uint256 feePercentage = 0; // 0%
+        // Set totalPool directly via cheatcode (slot 2: after owner and usdc)
+        bytes32 slot = bytes32(uint256(2));
+        vm.store(address(pool), slot, bytes32(uint256(5_000_000))); // 5 USDC
+        pool.allocateFunds(feePercentage, winners, percentages);
+        // Move time forward by 8 days
+        vm.warp(block.timestamp + 8 days);
+        pool.sweepUnclaimed(winners);
+        assertEq(pool.fundsAllocated(), false);
+        vm.stopPrank();
+    }
+
+    //test two allocateFunds calls after sweeping
+    function testAllocateFundsTwiceAfterSweeping() public {
+        vm.startPrank(owner);
+        address[] memory winners = new address[](1);
+        winners[0] = winner1;
+        uint256[] memory percentages = new uint256[](1);
+        percentages[0] = 10000; // 100%
+        uint256 feePercentage = 0; // 0%
+        // Set totalPool directly via cheatcode (slot 2: after owner and usdc)
+        bytes32 slot = bytes32(uint256(2));
+        vm.store(address(pool), slot, bytes32(uint256(5_000_000))); // 5 USDC
+        pool.allocateFunds(feePercentage, winners, percentages);
+        // Move time forward by 8 days
+        vm.warp(block.timestamp + 8 days);
+        pool.sweepUnclaimed(winners);
+        // Allocate again after sweeping
+        pool.allocateFunds(feePercentage, winners, percentages);
+        assertEq(pool.rewards(winner1), 5_000_000); // 5 USDC
+        vm.stopPrank();
+
+
+        //invariant: totalPool amount is correct after allocations and sweeps
+    }
 }

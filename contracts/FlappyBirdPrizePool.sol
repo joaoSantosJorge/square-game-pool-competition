@@ -61,6 +61,7 @@ contract FlappyBirdPrizePool {
         // Allocate to winners
         for (uint i = 0; i < winners.length; i++) {
             uint256 amount = pool * percentages[i] / 10000;
+            totalPool -= amount;
             rewards[winners[i]] += amount;
         }
         // Allocate fee to owner
@@ -89,6 +90,7 @@ contract FlappyBirdPrizePool {
                 emit UnclaimedFundsSwept(winners[i], amount);
             }
         }
+        fundsAllocated = false;
         lastUnclaimedSweep = block.timestamp;
     }
 

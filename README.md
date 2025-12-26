@@ -41,13 +41,21 @@ Additional features:
 3. tab with rules
 4. tab with leaderboard per game
 5. tab with wallet history accomplishments
+6. user permissions and window. Admin, user. Users have a tab to check their history.
 
 ### Further Additions
-1. Past learderboards archive
-2. Seasonal themes and events
-3. Social sharing of scores
+1. Admin has an additional window to set cycle time and winner number and fee
+2. Users have an additional page to check their history
+3. Past learderboards archive
 4. Multiplayer modes
 
 
 run command:
 python3 -m http.server 8000
+
+
+
+Order of deployment:
+1. smart-contract
+2. change flappyBirdContractAddress in payments.js
+3. deploy database and game
