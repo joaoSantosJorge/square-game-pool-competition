@@ -63,3 +63,50 @@ Order of deployment:
 1. smart-contract
 2. change flappyBirdContractAddress in payments.js
 3. deploy database and game
+
+
+### FileStructure
+
+x402-flappy-bird/
+│
+├── 📁 frontend/                    # Firebase Hosting (public files)
+│   ├── index.html
+│   ├── css/
+│   │   └── styles.css
+│   ├── js/
+│   │   ├── game.js              # Game logic
+│   │   ├── leaderboard.js       # Leaderboard display
+│   │   └── payments.js          # Wallet & payments
+│   └── assets/                   # Images, sounds, etc.
+│
+├── 📁 functions/                   # Firebase Cloud Functions (or keep separate for Render)
+│   ├── index.js                 # Cloud Function entry (or cycleManager.js)
+│   ├── package.json
+│   └── .env.example
+│
+├── 📁 contracts/                   # Smart contracts (Solidity)
+│   └── FlappyBirdPrizePool.sol
+│
+├── 📁 test/                        # Contract & function tests
+│   ├── FlappyBirdPrizePool.t.sol
+│   ├── MockUSDC.sol
+│   └── payments.test.js
+│
+├── 📁 script/                      # Deployment scripts
+│   └── Deploy.s.sol
+│
+├── 📁 docs/                        # Documentation
+│   ├── FIREBASE_SETUP.md
+│   └── DEPLOYMENT.md
+│
+├── 📁 config/                      # Configuration files
+│   ├── firebase.json
+│   ├── firestore.rules
+│   ├── firestore.indexes.json
+│   └── foundry.toml
+│
+├── .env.example                    # Environment template
+├── .gitignore
+├── package.json                    # Root package.json
+├── README.md
+└── deploy-testnet.sh
