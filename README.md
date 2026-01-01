@@ -65,16 +65,14 @@ Order of deployment:
 3. deploy database and game
 
 
-HOW TO ENCRYPT PRIVATE KEYS?
-1. FOUNDRY
-2. AWS secrets manager
+### TODO:
+1. deploy dev in render
+2. deploy front end in firebase
+3. test
+4. iterate
 
 WHAT YOU PRACTICE IN DEV, YOU WILL DO IN PROD.
 
-
-PRACTICE ANVIL
-
-FORK -> DEV and PROD
 
 ### FileStructure
 
