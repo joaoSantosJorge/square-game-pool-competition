@@ -12,6 +12,9 @@ firebase-debug.log
 .env
 .env.local
 
+# Firebase Functions local config (contains sensitive data)
+functions/.runtimeconfig.json
+
 # Secret keys and credentials
 serviceAccountKey.json
 render-secrets/

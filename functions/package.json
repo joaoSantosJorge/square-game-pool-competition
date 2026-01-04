@@ -1,31 +1,29 @@
 {
-  "name": "flappy-bird-cycle-manager",
+  "name": "functions",
   "version": "1.0.0",
-  "description": "Automated cycle manager for Flappy Bird prize pool allocation",
-  "main": "cycleManager.js",
+  "description": "Cloud Functions for Firebase - Flappy Bird Cycle Manager",
   "scripts": {
-    "start": "node cycleManager.js",
-    "dev": "nodemon cycleManager.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
   },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
   "dependencies": {
-    "web3": "^4.0.0",
     "firebase-admin": "^12.0.0",
-    "dotenv": "^16.0.0"
+    "firebase-functions": "^5.0.0",
+    "web3": "^4.3.0",
+    "ethers": "^6.9.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0",
-    "jest": "^29.7.0",
-    "@types/jest": "^29.5.0"
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
   },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageDirectory": "coverage",
-    "collectCoverageFrom": [
-      "js/**/*.js",
-      "!js/**/*.test.js"
-    ]
-  }
+  "private": true
 }
