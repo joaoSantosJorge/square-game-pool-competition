@@ -11,7 +11,14 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "public": "frontend",
+  "hosting": {
+    "public": "frontend",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
   "functions": [
     {
       "source": "functions",
