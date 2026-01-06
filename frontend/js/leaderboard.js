@@ -3,13 +3,13 @@
 
 // Firebase configuration
 const firebaseConfig = {
-    // TODO: Add your Firebase config
-    apiKey: "your-api-key",
-    authDomain: "your-project.firebaseapp.com",
-    projectId: "your-project-id",
-    storageBucket: "your-project.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "your-app-id"
+    apiKey: "AIzaSyCprQvJl7-ZC-6QK4ct5tBngJzOgF33MpM",
+    authDomain: "flappy-bird-leaderboard-463e0.firebaseapp.com",
+    projectId: "flappy-bird-leaderboard-463e0",
+    storageBucket: "flappy-bird-leaderboard-463e0.firebasestorage.app",
+    messagingSenderId: "344067272312",
+    appId: "1:344067272312:web:5d4fc513df1df38a87c78d",
+    measurementId: "G-YM6Z2TPHG8"
 };
 
 // Initialize Firebase

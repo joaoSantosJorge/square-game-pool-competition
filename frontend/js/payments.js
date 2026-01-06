@@ -49,16 +49,19 @@ async function payToPlay() {
         return;
     }
 
-    // Check if on Base network (chain ID 8453)
+    // TODO: Switch to Base Mainnet when going to production
+    // Base Mainnet: chainId 8453 (0x2105), USDC: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+    
+    // Check if on Base Sepolia testnet (chain ID 84532)
     const chainId = await web3.eth.getChainId();
-    if (chainId !== 8453) {
-        alert('Please switch to Base network to make the payment');
+    if (chainId !== 84532) {
+        alert('Please switch to Base Sepolia testnet to make the payment');
         // Try to switch for MetaMask
         if (window.ethereum) {
             try {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x2105' }],
+                    params: [{ chainId: '0x14a34' }], // Base Sepolia chain ID
                 });
             } catch (switchError) {
                 // If network not added, add it
@@ -67,26 +70,27 @@ async function payToPlay() {
                         await window.ethereum.request({
                             method: 'wallet_addEthereumChain',
                             params: [{
-                                chainId: '0x2105',
-                                chainName: 'Base',
+                                chainId: '0x14a34',
+                                chainName: 'Base Sepolia',
                                 nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                                rpcUrls: ['https://mainnet.base.org'],
-                                blockExplorerUrls: ['https://basescan.org'],
+                                rpcUrls: ['https://sepolia.base.org'],
+                                blockExplorerUrls: ['https://sepolia.basescan.org'],
                             }],
                         });
                     } catch (addError) {
-                        console.error('Failed to add Base network:', addError);
+                        console.error('Failed to add Base Sepolia network:', addError);
                     }
                 } else {
-                    console.error('Failed to switch to Base network:', switchError);
+                    console.error('Failed to switch to Base Sepolia network:', switchError);
                 }
             }
         }
         return;
     }
 
-    const usdcAddress = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // USDC contract on Base network
-    const flappyBirdContractAddress = 'YOUR_DEPLOYED_CONTRACT_ADDRESS'; // TODO: Replace with deployed FlappyBirdPrizePool address
+    // Base Sepolia testnet addresses
+    const usdcAddress = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // USDC contract on Base Sepolia
+    const flappyBirdContractAddress = '0xdd0bbf48f85f5314c3754cd63103be927b55986c'; // FlappyBirdPrizePool on Base Sepolia
     const amount = 20000; // 0.02 USDC (6 decimals)
 
     const usdcAbi = [
@@ -138,10 +142,11 @@ async function payToPlay() {
 
 // Initialize WalletConnect connection
 async function initWalletConnect() {
+    // TODO: Update chainId to 8453 (Base Mainnet) when going to production
     const provider = new WalletConnectProvider({
         infuraId: "your-infura-id", // TODO: Replace with your Infura project ID
         qrcode: true, // Show QR code for mobile wallets
-        chainId: 8453, // Base network
+        chainId: 84532, // Base Sepolia testnet
     });
 
     try {
