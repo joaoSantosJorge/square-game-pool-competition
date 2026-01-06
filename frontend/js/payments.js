@@ -3,6 +3,8 @@
 
 let web3;
 let userAccount;
+let hasPaid = false; // Track if user has paid to play
+let triesRemaining = 0; // Track remaining tries (10 tries per payment)
 
 // Update wallet display
 function updateWalletDisplay() {
@@ -11,6 +13,14 @@ function updateWalletDisplay() {
         walletInfo.textContent = 'Wallet: ' + userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
     } else {
         walletInfo.textContent = 'Wallet: Not connected';
+    }
+}
+
+// Update tries display
+function updateTriesDisplay() {
+    const triesInfo = document.getElementById('tries-info');
+    if (triesInfo) {
+        triesInfo.textContent = 'Tries Remaining: ' + triesRemaining;
     }
 }
 
@@ -115,7 +125,11 @@ async function payToPlay() {
         await flappyBirdContract.methods.payToPlay().send({ from: userAccount });
         
         console.log('Payment successful! You can now play the game.');
-        // TODO: Enable game after payment
+        hasPaid = true;
+        triesRemaining = 10; // Grant 10 tries per payment
+        updateTriesDisplay();
+        document.getElementById('start-btn').disabled = false;
+        alert('Payment successful! You have 10 tries to play.');
     } catch (error) {
         console.error('Payment failed:', error);
         alert('Payment failed. Please try again.');

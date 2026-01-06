@@ -162,6 +162,17 @@ function updateScore() {
 
 // Show game over
 function showGameOver() {
+    // Decrement tries
+    if (typeof triesRemaining !== 'undefined') {
+        triesRemaining--;
+        if (typeof updateTriesDisplay === 'function') {
+            updateTriesDisplay();
+        }
+        if (triesRemaining <= 0) {
+            hasPaid = false;
+        }
+    }
+    
     // ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
@@ -170,7 +181,13 @@ function showGameOver() {
     ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 50);
     ctx.font = '24px Arial';
     ctx.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2);
-    ctx.fillText('Click to Restart', canvas.width / 2, canvas.height / 2 + 50);
+    
+    // Show tries remaining
+    if (typeof triesRemaining !== 'undefined') {
+        ctx.fillText('Tries Remaining: ' + triesRemaining, canvas.width / 2, canvas.height / 2 + 30);
+    }
+    
+    ctx.fillText('Click to Restart', canvas.width / 2, canvas.height / 2 + 60);
     ctx.textAlign = 'left';
 
     // Submit score to leaderboard if connected
@@ -191,6 +208,16 @@ function resetGame() {
 
 // Start game
 document.getElementById('start-btn').addEventListener('click', () => {
+    // Check if user has paid and has tries remaining
+    if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
+        alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+        return;
+    }
+    if (typeof hasPaid !== 'undefined' && !hasPaid) {
+        alert('Please pay 0.02 USDC to play the game!');
+        return;
+    }
+    
     if (gameOver) {
         resetGame();
     }
