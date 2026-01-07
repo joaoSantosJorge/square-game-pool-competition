@@ -246,6 +246,16 @@ document.addEventListener('keydown', (e) => {
 
 canvas.addEventListener('click', () => {
     if (gameOver) {
+        // Check if user has paid and has tries remaining before allowing restart
+        if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
+            alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+            return;
+        }
+        if (typeof hasPaid !== 'undefined' && !hasPaid) {
+            alert('Please pay 0.02 USDC to play the game!');
+            return;
+        }
+        
         resetGame();
         gameRunning = true;
         gameLoop();
