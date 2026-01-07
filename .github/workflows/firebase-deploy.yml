@@ -48,8 +48,20 @@ jobs:
       
       - name: Deploy Functions
         if: steps.changes.outputs.functions_changed == 'true'
+        env:
+          KEYSTORE_DATA: ${{ secrets.KEYSTORE_DATA }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+          CYCLE_DURATION_DAYS: ${{ secrets.CYCLE_DURATION_DAYS }}
+          NUMBER_OF_WINNERS: ${{ secrets.NUMBER_OF_WINNERS }}
+          FEE_PERCENTAGE: ${{ secrets.FEE_PERCENTAGE }}
         run: |
           cd functions && npm install
+          # Set Firebase Functions secrets
+          firebase functions:secrets:set KEYSTORE_DATA --data-file <(echo "$KEYSTORE_DATA") --project flappy-bird-leaderboard-463e0 || true
+          firebase functions:secrets:set KEYSTORE_PASSWORD --data-file <(echo "$KEYSTORE_PASSWORD") --project flappy-bird-leaderboard-463e0 || true
+          # Deploy all functions (including new submitScore function)
           firebase deploy --only functions --project flappy-bird-leaderboard-463e0
       
       - name: Deploy Firestore Rules
