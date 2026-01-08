@@ -14,7 +14,18 @@ const BASE_SEPOLIA_RPC = 'https://sepolia.base.org';
 async function updatePrizePool() {
     try {
         const poolDisplay = document.getElementById('pool-amount');
-        if (!poolDisplay) return;
+        if (!poolDisplay) {
+            console.log('Pool display element not found');
+            return;
+        }
+
+        // Check if Web3 is loaded
+        if (typeof Web3 === 'undefined') {
+            console.log('Web3 not loaded yet, retrying...');
+            poolDisplay.textContent = 'Loading...';
+            setTimeout(updatePrizePool, 1000); // Retry after 1 second
+            return;
+        }
 
         // Create a Web3 instance for reading (doesn't require wallet connection)
         const readWeb3 = new Web3(BASE_SEPOLIA_RPC);
@@ -32,12 +43,19 @@ async function updatePrizePool() {
         const contract = new readWeb3.eth.Contract(contractABI, FLAPPY_BIRD_CONTRACT_ADDRESS);
         const totalPool = await contract.methods.totalPool().call();
         
+        console.log('Total pool from contract:', totalPool);
+        
         // Convert from 6 decimals (USDC) to readable format
         const poolUSDC = (parseInt(totalPool) / 1000000).toFixed(2);
         poolDisplay.textContent = `$${poolUSDC}`;
+        
+        console.log('Prize pool updated:', poolUSDC, 'USDC');
     } catch (error) {
         console.error('Error fetching prize pool:', error);
-        document.getElementById('pool-amount').textContent = 'Error';
+        const poolDisplay = document.getElementById('pool-amount');
+        if (poolDisplay) {
+            poolDisplay.textContent = 'Error';
+        }
     }
 }
 
