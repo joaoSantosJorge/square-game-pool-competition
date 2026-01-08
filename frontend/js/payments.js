@@ -278,7 +278,3 @@ window.addEventListener('load', () => {
     // Refresh prize pool every 30 seconds
     setInterval(updatePrizePool, 30000);
 });
-    } else {
-        alert('Unknown wallet type. Please enter metamask, walletconnect, or coinbase.');
-    }
-});
