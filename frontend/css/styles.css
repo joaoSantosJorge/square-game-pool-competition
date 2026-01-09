@@ -158,9 +158,9 @@ h2, #wallet-info {
     background: var(--pool-bg);
     color: var(--pool-fg);
     border: 2px solid var(--pool-border);
-    border-radius: 6px;
+    border-radius: 0;
     padding: 6px 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
     font-family: 'Courier New', Courier, 'Lucida Console', monospace;
     text-align: center;
     min-width: 100px;
@@ -196,23 +196,23 @@ h2, #wallet-info {
     padding: 6px 12px;
     font-size: 11px;
     font-family: 'Courier New', Courier, 'Lucida Console', monospace;
-    background: var(--bg);
-    color: var(--fg);
-    border: 2px solid var(--border);
-    border-radius: 6px;
+    background: var(--button-bg);
+    color: var(--button-fg);
+    border: 2px solid var(--button-border);
+    border-radius: 0;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: all 0.2s;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
     z-index: 100;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
 }
 
 .claim-btn:hover:not(:disabled) {
-    opacity: 0.85;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+    background: var(--button-fg);
+    color: var(--button-bg);
+    box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1);
 }
 
 .claim-btn:disabled {
