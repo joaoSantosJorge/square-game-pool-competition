@@ -35,6 +35,38 @@ if (modeToggleBtn) {
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
+// Disable image smoothing for pixel art
+ctx.imageSmoothingEnabled = false;
+
+// Load bird image
+const birdImage = new Image();
+let birdImageLoaded = false;
+birdImage.onload = function() {
+    birdImageLoaded = true;
+    console.log('Bird image loaded successfully');
+};
+birdImage.onerror = function() {
+    console.error('Failed to load bird image');
+};
+birdImage.src = 'assets/bird.png';
+
+// Load background images
+const backgroundDay = new Image();
+let backgroundDayLoaded = false;
+backgroundDay.onload = function() {
+    backgroundDayLoaded = true;
+    console.log('Day background loaded successfully');
+};
+backgroundDay.src = 'assets/background-day.png';
+
+const backgroundNight = new Image();
+let backgroundNightLoaded = false;
+backgroundNight.onload = function() {
+    backgroundNightLoaded = true;
+    console.log('Night background loaded successfully');
+};
+backgroundNight.src = 'assets/background-night.png';
+
 // Game variables
 let bird = {
     x: 50,
@@ -131,12 +163,20 @@ function checkCollision() {
 
 // Draw everything
 function draw() {
-    // Background
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#87CEEB'); // Sky blue
-    gradient.addColorStop(1, '#98FB98'); // Light green
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Background - use image based on light/dark mode
+    const isLightMode = body.classList.contains('light-mode');
+    if (isLightMode && backgroundDayLoaded) {
+        ctx.drawImage(backgroundDay, 0, 0, canvas.width, canvas.height);
+    } else if (!isLightMode && backgroundNightLoaded) {
+        ctx.drawImage(backgroundNight, 0, 0, canvas.width, canvas.height);
+    } else {
+        // Fallback gradient if images not loaded
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, isLightMode ? '#87CEEB' : '#1a1a2e');
+        gradient.addColorStop(1, isLightMode ? '#98FB98' : '#16213e');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     // Pipes
     ctx.fillStyle = '#228B22';
@@ -145,9 +185,13 @@ function draw() {
         ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, canvas.height - pipe.bottomY);
     }
 
-    // Bird
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    // Bird - draw image if loaded, otherwise fallback to rectangle
+    if (birdImageLoaded) {
+        ctx.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+    } else {
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    }
 
     // Score
     ctx.fillStyle = '#000';
