@@ -1,143 +1,259 @@
-# SEED GAMES
+# Flappy Bird Competition Prize Pool
 
-1. Flappy Bird
-2. Tetris
-3. Snake
-4. Pong (2v2 possible?)
-5. minesweeper
-6. breakout
-7. space invaders
-8. asteroids
-9. platformer (mario style)
+A blockchain-based competitive Flappy Bird game with USDC prize pools on Base Sepolia. Players pay to play, compete for high scores, and winners claim rewards through smart contracts.
 
-## Logic
-Each game deploys a smart contract that handles micropayments and leaderboard management. Players pay a small fee to play (0.02USDC for 20 credits - 20 atemps), which goes into a prize pool. The smart contract tracks high scores and distributes rewards to top players at regular intervals.
+**🎮 Live Demo**: [https://flappy-bird-leaderboard-463e0.web.app/](https://flappy-bird-leaderboard-463e0.web.app/)
 
-### Contract Notes
-Owner controls:
-1. fee percentage
-2. cycle time
-3. winner allocation (1-10 winners)
+## Table of Contents
 
-Happy path:
-1. cycle time ends (back-end function),
-2. Back-end sends request to contract with list of winners and percentage alocation.
-3. allocates funds for claim
-4. back-end resets database
+- [Overview](#overview)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Development](#development)
+- [Smart Contract](#smart-contract)
+- [Deployment](#deployment)
+- [Architecture](#architecture)
+- [Roadmap](#roadmap)
 
-Conditions on claims:
-1. winners have 7 days to claim funds. After that, funds are returned to the prize pool for the next cycle.
+## Overview
 
-Additional features:
-1. It is possible to send funds directly to the contract to increase the prize pool.
-2. Block address from participating (in case of cheating).
+Each game cycle operates through a smart contract that handles micropayments and leaderboard management. Players pay **0.02 USDC for 20 attempts**, building a prize pool that is distributed to top performers at the end of each cycle.
 
-### Storage:
-1. Firebase
+### How It Works
 
-### Website Design
-1. Retro design (only black and white - maybe gray)
-2. Initial page with title (Seed Games - seed games - SEED GAMES), games displayed in a square, name of the game, connect wallet symbol, cycle time end in days, hours, minutes
-3. tab with rules
-4. tab with leaderboard per game
-5. tab with wallet history accomplishments
-6. user permissions and window. Admin, user. Users have a tab to check their history.
+1. **Payment**: Players connect their wallet and pay 0.02 USDC for 20 game attempts
+2. **Competition**: Compete for high scores stored in Firebase Firestore
+3. **Cycle End**: Backend function triggers end of competition cycle
+4. **Distribution**: Smart contract allocates funds to top 1-10 winners based on rankings
+5. **Claiming**: Winners have 7 days to claim rewards; unclaimed funds roll over to next cycle
 
-### Further Additions
-1. Admin has an additional window to set cycle time and winner number and fee
-2. Users have an additional page to check their history
-3. Past learderboards archive
-4. Multiplayer modes
+## Features
 
+### Current Features
 
-run command:
+- ✅ **Web3 Wallet Integration** - Connect with Coinbase Wallet or MetaMask
+- ✅ **USDC Payments** - Pay-to-play with USDC on Base Sepolia
+- ✅ **Prize Pool System** - Automated prize distribution via smart contract
+- ✅ **Real-time Leaderboard** - Firebase Firestore integration
+- ✅ **Retro UI Design** - Minimalist black/white theme with dark mode toggle
+- ✅ **Anti-Cheat** - Address blocking functionality
+
+### Smart Contract Controls (Owner Only)
+
+- Set fee percentage
+- Configure cycle duration
+- Define winner allocation (1-10 winners with custom percentages)
+- Block/unblock addresses
+- Emergency functions
+
+### Additional Capabilities
+
+- Direct donations to prize pool (anyone can contribute)
+- 7-day claim window with automatic rollover
+- Complete transaction history tracking
+
+## Prerequisites
+
+- **Node.js** (v16+)
+- **Python 3** (for local development server)
+- **Foundry** (for smart contract development)
+- **Firebase CLI** (for backend deployment)
+- **Git**
+- **Web3 Wallet** (Coinbase Wallet or MetaMask)
+- **Base Sepolia ETH** (for testing)
+
+## Quick Start
+
+### Local Development
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd flappybird-pool-competition
+
+# Install dependencies
+npm install
+cd functions && npm install && cd ..
+
+# Start local development server
 python3 -m http.server 8000
 
+# Open browser
+# Navigate to http://localhost:8000/frontend/
+```
 
-### Base Sepolia contract:
-https://sepolia.basescan.org/address/0xdd0bbf48f85f5314c3754cd63103be927b55986c
-address: 0xdd0bbf48f85f5314c3754cd63103be927b55986c
+### Firebase Functions (Backend)
 
+```bash
+# Install Firebase CLI globally
+npm install -g firebase-tools
 
-Order of deployment:
-1. smart-contract
-2. change flappyBirdContractAddress in payments.js
-3. deploy database and game
+# Login to Firebase
+firebase login
 
+# Deploy functions
+firebase deploy --only functions
+```
 
-### TODO:
-1. deploy dev in render
-2. deploy front end in firebase
-3. test
-4. iterate
-5. readme with correct instructions
+## Development
 
-WHAT YOU PRACTICE IN DEV, YOU WILL DO IN PROD.
+### Running Tests
 
+```bash
+# Smart contract tests (Foundry)
+forge test
+
+# Backend tests (Node.js)
+cd functions
+npm test
+```
+
+### Environment Variables
+
+Create `.env` files in appropriate directories:
+
+**Root `.env` (for contract deployment)**:
+```env
+PRIVATE_KEY=your_private_key
+BASE_SEPOLIA_RPC_URL=your_rpc_url
+```
+
+**`functions/.env` (for backend)**:
+```env
+FIREBASE_SERVICE_ACCOUNT=path_to_service_account.json
+CONTRACT_ADDRESS=0xdd0bbf48f85f5314c3754cd63103be927b55986c
+```
+
+See [docs/SECRET_KEY_MANAGEMENT.md](docs/SECRET_KEY_MANAGEMENT.md) for details.
+
+## Smart Contract
+
+### Deployed Contract (Base Sepolia)
+
+- **Address**: `0xdd0bbf48f85f5314c3754cd63103be927b55986c`
+- **Explorer**: [View on BaseScan](https://sepolia.basescan.org/address/0xdd0bbf48f85f5314c3754cd63103be927b55986c)
+- **Network**: Base Sepolia Testnet
+
+### Key Functions
+
+- `allocateFunds(address[] winners, uint256[] percentages)` - Distribute prize pool
+- `claimRewards()` - Winners claim their allocated rewards
+- `blockAddress(address)` / `unblockAddress(address)` - Anti-cheat measures
+- `setCycleDuration(uint256)` - Configure cycle length
+- `setFeePercentage(uint256)` - Adjust platform fees
+
+## Deployment
+
+### Deployment Order
+
+⚠️ **IMPORTANT**: What you practice in dev, you will do in prod.
+
+1. **Deploy Smart Contract**
+   ```bash
+   forge script script/Deploy.s.sol --rpc-url base-sepolia --broadcast --verify
+   ```
+
+2. **Update Contract Address**
+   - Edit `frontend/js/payments.js`
+   - Set `flappyBirdContractAddress` to deployed contract address
+
+3. **Deploy Database & Backend**
+   ```bash
+   firebase deploy --only firestore:rules,firestore:indexes,functions
+   ```
+
+4. **Deploy Frontend**
+   ```bash
+   firebase deploy --only hosting
+   ```
+
+### Deployment Checklist
+
+- [ ] Smart contract deployed and verified
+- [ ] Contract address updated in `payments.js`
+- [ ] Firebase project configured
+- [ ] Environment variables set
+- [ ] Firestore rules deployed
+- [ ] Cloud Functions deployed
+- [ ] Frontend deployed to Firebase Hosting
+- [ ] Test all functionality on testnet
+
+## Architecture
+
+The project uses a **monorepo structure** with three main layers:
+## Architecture
+
+The project uses a **monorepo structure** with three main layers:
+
+### 1. Smart Contracts (`contracts/`)
+- Solidity contracts handling payments, prize pools, and rewards
+- Deployed on Base Sepolia testnet
+- Tested with Foundry
+
+### 2. Backend (`functions/`)
+- Firebase Cloud Functions for serverless backend
+- Cycle management automation
+- Leaderboard synchronization with smart contract
+- Firebase Firestore for data storage
+
+### 3. Frontend (`frontend/`)
+- Vanilla JavaScript game implementation
+- Web3 wallet integration (Coinbase Wallet, MetaMask)
+- Real-time leaderboard display
+- Retro-themed minimalist UI
 
 ### File Structure
 
 ```
-x402-flappy-bird/                   # MONOREPO (everything together)
+flappybird-pool-competition/
 │
-├── 📁 contracts/                   # Smart Contracts Layer
-│   ├── FlappyBirdPrizePool.sol
+├── 📁 contracts/                   # Smart Contracts
+│   ├── FlappyBirdPrizePool.sol    # Main contract
 │   └── interfaces/
 │
-├── 📁 functions/                   # Backend Layer (Firebase Cloud Functions)
+├── 📁 functions/                   # Backend (Firebase Cloud Functions)
 │   ├── index.js                    # Entry point
-│   ├── cycleManager.js             # Cycle management logic
-│   ├── package.json
-│   ├── .env                        # Production config (not committed)
-│   └── .env.local                  # Local config (not committed)
+│   ├── cycleManager.js             # Cycle management
+│   └── package.json
 │
-├── 📁 frontend/                    # Frontend Layer (Firebase Hosting)
+├── 📁 frontend/                    # Frontend (Static hosting)
 │   ├── index.html
 │   ├── css/
 │   │   └── styles.css
 │   ├── js/
 │   │   ├── game.js                 # Game logic
-│   │   ├── leaderboard.js          # Leaderboard display
-│   │   └── payments.js             # Wallet & USDC payments
-│   └── assets/                     # Images, sounds, etc.
+│   │   ├── leaderboard.js          # Leaderboard UI
+│   │   └── payments.js             # Web3 integration
+│   └── assets/
 │
-├── 📁 script/                      # Deployment Scripts
-│   └── Deploy.s.sol                # Foundry deployment
+├── 📁 script/                      # Deployment scripts
+│   └── Deploy.s.sol
 │
-├── 📁 test/                        # Tests (all layers)
-│   ├── FlappyBirdPrizePool.t.sol   # Contract tests
-│   ├── MockUSDC.sol                # Test helpers
-│   └── cycleManager.test.js        # Backend tests
+├── 📁 test/                        # Test suite
+│   ├── FlappyBirdPrizePool.t.sol  # Contract tests
+│   ├── MockUSDC.sol               # Test utilities
+│   └── cycleManager.test.js       # Backend tests
 │
 ├── 📁 docs/                        # Documentation
 │   ├── FIREBASE_SETUP.md
 │   ├── FIREBASE_CYCLE_MANAGER_DEPLOYMENT.md
 │   └── SECRET_KEY_MANAGEMENT.md
 │
-├── 📄 firebase.json                # Firebase config
-├── 📄 firestore.rules              # Database security rules
-├── 📄 firestore.indexes.json       # Database indexes
-├── 📄 foundry.toml                 # Contract framework config
-├── 📄 .env                         # Root env (for contract deployment)
-├── 📄 .gitignore                   # Git ignore (protects secrets)
-├── 📄 package.json                 # Root dependencies
-└── 📄 README.md                    # This file
+├── firebase.json                   # Firebase configuration
+├── firestore.rules                 # Database security rules
+├── firestore.indexes.json          # Database indexes
+├── foundry.toml                    # Foundry configuration
+└── README.md
 ```
 
-**Architecture**: Monorepo with clear separation of concerns
-- Each folder is independent but shares configs
-- Single deployment pipeline via Firebase
-- Contract deployed separately via Foundry
 
+## Documentation
 
-# TODO for production
-how is an update done in my app?
+- [Firebase Setup Guide](docs/FIREBASE_SETUP.md)
+- [Cycle Manager Deployment](docs/FIREBASE_CYCLE_MANAGER_DEPLOYMENT.md)
+- [Secret Key Management](docs/SECRET_KEY_MANAGEMENT.md)
 
-Would it be possible for a user to send a request updating his highest score without playing?
+---
 
-For production, you should:
-
-Implement server-side verification via Cloud Functions
-Verify wallet signatures
-Add rate limiting
-Possibly add game state verification
+**⚠️ Testnet Only**: This project is currently deployed on Base Sepolia testnet. Do not use with real funds on mainnet without thorough auditing.
