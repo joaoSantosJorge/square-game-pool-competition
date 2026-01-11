@@ -109,14 +109,16 @@ async function fetchCycleEndTime() {
         
         if (cycleDoc.exists) {
             const data = cycleDoc.data();
-            if (data['end-time']) {
-                // Convert Firestore timestamp to JavaScript Date
-                if (data['end-time'].toDate) {
-                    cycleEndTime = data['end-time'].toDate();
-                } else if (data['end-time'] instanceof Date) {
-                    cycleEndTime = data['end-time'];
+            if (data.endTime) {
+                // Convert timestamp to JavaScript Date
+                if (typeof data.endTime === 'number') {
+                    cycleEndTime = new Date(data.endTime);
+                } else if (data.endTime.toDate) {
+                    cycleEndTime = data.endTime.toDate();
+                } else if (data.endTime instanceof Date) {
+                    cycleEndTime = data.endTime;
                 } else {
-                    cycleEndTime = new Date(data['end-time']);
+                    cycleEndTime = new Date(data.endTime);
                 }
                 console.log('Cycle end time loaded from Firebase:', cycleEndTime);
             }
