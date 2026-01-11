@@ -35,6 +35,12 @@ cache/
 # smart contract folders
 lib/
 
+# Compiler output
+input.json
+
+# Zone Identifier files
+*:Zone.Identifier
+
 # Python
 __pycache__/
 *.pyc
