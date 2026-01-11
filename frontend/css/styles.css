@@ -150,6 +150,24 @@ h2, #wallet-info {
     transition: color 0.3s, text-shadow 0.3s;
 }
 
+/* Cycle Time Display - Top Left Corner */
+#cycle-time-display {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--pool-fg);
+    color: var(--pool-bg);
+    border: 2px solid var(--pool-border);
+    border-radius: 0;
+    padding: 6px 10px;
+    box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+    font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+    text-align: center;
+    min-width: 100px;
+    z-index: 100;
+    transition: background 0.3s, color 0.3s, border 0.3s;
+}
+
 /* Prize Pool Display - Top Right Corner */
 #prize-pool-display {
     position: absolute;
@@ -183,7 +201,7 @@ h2, #wallet-info {
     letter-spacing: 0.5px;
 }
 
-.pool-amount::before {
+#pool-amount::before {
     content: '💰 ';
     font-size: 12px;
 }
