@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard Archive - Flappy Bird Prize Pool</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .archive-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--button-fg);
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid var(--button-border);
+            background: var(--button-bg);
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+            box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1);
+        }
+        h1 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            text-shadow: var(--score-shadow);
+            letter-spacing: 2px;
+            font-size: 32px;
+            margin: 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 20px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .stat-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .stat-value {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: var(--score-shadow);
+        }
+        .cycles-container {
+            margin-top: 30px;
+        }
+        .cycle-card {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .cycle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .cycle-title {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .cycle-info {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .cycle-pool {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            padding: 4px 12px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .winners-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+        }
+        .winners-table th,
+        .winners-table td {
+            border: 1px solid var(--leaderboard-li-border);
+            padding: 12px;
+            text-align: left;
+        }
+        .winners-table th {
+            background: var(--bg);
+            color: var(--fg);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+        .winners-table td {
+            color: var(--fg);
+            font-size: 15px;
+        }
+        .rank-badge {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .rank-1 { color: #FFD700; }
+        .rank-2 { color: #C0C0C0; }
+        .rank-3 { color: #CD7F32; }
+        .wallet-address {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 13px;
+        }
+        .loading-message, .no-data-message {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-controls select {
+            padding: 8px 16px;
+            border: 2px solid var(--button-border);
+            background: var(--button-bg);
+            color: var(--button-fg);
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="archive-container">
+        <div class="nav-header">
+            <h1>📊 LEADERBOARD ARCHIVE</h1>
+            <div class="nav-links">
+                <button id="toggle-mode-btn" style="margin: 0;">Toggle Light/Dark</button>
+                <a href="index.html">Home</a>
+                <a href="game.html">Play Game</a>
+                <a href="rules.html">Rules</a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Cycles</div>
+                <div class="stat-value" id="total-cycles">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Prize Pool</div>
+                <div class="stat-value" id="total-pool">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Winners</div>
+                <div class="stat-value" id="total-winners">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Highest Score Ever</div>
+                <div class="stat-value" id="highest-score">-</div>
+            </div>
+        </div>
+
+        <div class="filter-controls">
+            <select id="sort-filter">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="pool-high">Highest Pool</option>
+                <option value="pool-low">Lowest Pool</option>
+            </select>
+        </div>
+
+        <div class="cycles-container" id="cycles-container">
+            <div class="loading-message">Loading historical data...</div>
+        </div>
+    </div>
+
+    <!-- Load Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCprQvJl7-ZC-6QK4ct5tBngJzOgF33MpM",
+            authDomain: "flappy-bird-leaderboard-463e0.firebaseapp.com",
+            projectId: "flappy-bird-leaderboard-463e0",
+            storageBucket: "flappy-bird-leaderboard-463e0.firebasestorage.app",
+            messagingSenderId: "344067272312",
+            appId: "1:344067272312:web:5d4fc513df1df38a87c78d",
+            measurementId: "G-YM6Z2TPHG8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Connect to Firestore emulator if running locally
+        if (location.hostname === "localhost") {
+            db.useEmulator("localhost", 8080);
+            console.log("Using Firestore emulator at localhost:8080");
+        }
+
+        // Theme toggle functionality
+        const toggleBtn = document.getElementById('toggle-mode-btn');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+        
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // Truncate wallet address for display
+        function truncateAddress(address) {
+            if (!address) return 'Unknown';
+            if (address.length < 12) return address;
+            return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+        }
+
+        // Format USDC amount
+        function formatUSDC(amount) {
+            if (!amount && amount !== 0) return '0.00';
+            return parseFloat(amount).toFixed(2);
+        }
+
+        // Get medal emoji for rank
+        function getRankEmoji(rank) {
+            switch(rank) {
+                case 1: return '🥇';
+                case 2: return '🥈';
+                case 3: return '🥉';
+                default: return `${rank}.`;
+            }
+        }
+
+        // Load and display archived cycles
+        async function loadArchive() {
+            try {
+                // Load cycle history from Firestore
+                const cyclesSnapshot = await db.collection('cycleHistory').orderBy('endDate', 'desc').get();
+                
+                const cycles = [];
+                cyclesSnapshot.forEach(doc => {
+                    cycles.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (cycles.length === 0) {
+                    document.getElementById('cycles-container').innerHTML = 
+                        '<div class="no-data-message">No archived cycles yet. Complete the first cycle to see historical data!</div>';
+                    return;
+                }
+
+                // Calculate statistics
+                let totalPool = 0;
+                let totalWinners = 0;
+                let highestScore = 0;
+
+                cycles.forEach(cycle => {
+                    totalPool += parseFloat(cycle.prizePool || 0);
+                    totalWinners += (cycle.winners || []).length;
+                    cycle.winners?.forEach(winner => {
+                        if (winner.score > highestScore) {
+                            highestScore = winner.score;
+                        }
+                    });
+                });
+
+                // Update statistics cards
+                document.getElementById('total-cycles').textContent = cycles.length;
+                document.getElementById('total-pool').textContent = `${formatUSDC(totalPool)} USDC`;
+                document.getElementById('total-winners').textContent = totalWinners;
+                document.getElementById('total-score').textContent = highestScore;
+
+                // Display cycles
+                displayCycles(cycles);
+
+                // Setup filter
+                document.getElementById('sort-filter').addEventListener('change', (e) => {
+                    sortAndDisplayCycles(cycles, e.target.value);
+                });
+
+            } catch (error) {
+                console.error('Error loading archive:', error);
+                document.getElementById('cycles-container').innerHTML = 
+                    '<div class="no-data-message">Error loading archive data. Please try again later.</div>';
+            }
+        }
+
+        function sortAndDisplayCycles(cycles, sortType) {
+            let sortedCycles = [...cycles];
+            
+            switch(sortType) {
+                case 'oldest':
+                    sortedCycles.reverse();
+                    break;
+                case 'pool-high':
+                    sortedCycles.sort((a, b) => parseFloat(b.prizePool || 0) - parseFloat(a.prizePool || 0));
+                    break;
+                case 'pool-low':
+                    sortedCycles.sort((a, b) => parseFloat(a.prizePool || 0) - parseFloat(b.prizePool || 0));
+                    break;
+                // 'newest' is default, already sorted
+            }
+            
+            displayCycles(sortedCycles);
+        }
+
+        function displayCycles(cycles) {
+            const container = document.getElementById('cycles-container');
+            container.innerHTML = '';
+
+            cycles.forEach((cycle, index) => {
+                const cycleCard = createCycleCard(cycle, index);
+                container.appendChild(cycleCard);
+            });
+        }
+
+        function createCycleCard(cycle, index) {
+            const card = document.createElement('div');
+            card.className = 'cycle-card';
+
+            const startDate = cycle.startDate ? new Date(cycle.startDate.seconds * 1000).toLocaleDateString() : 'Unknown';
+            const endDate = cycle.endDate ? new Date(cycle.endDate.seconds * 1000).toLocaleDateString() : 'Unknown';
+            
+            const winners = cycle.winners || [];
+            const prizePool = formatUSDC(cycle.prizePool || 0);
+            const totalPlayers = cycle.totalPlayers || 0;
+
+            let winnersTableHTML = '';
+            if (winners.length > 0) {
+                winnersTableHTML = `
+                    <table class="winners-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Wallet</th>
+                                <th>Score</th>
+                                <th>Prize</th>
+                                <th>% Share</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${winners.map((winner, idx) => `
+                                <tr>
+                                    <td><span class="rank-badge rank-${idx + 1}">${getRankEmoji(idx + 1)}</span></td>
+                                    <td class="wallet-address">${truncateAddress(winner.wallet)}</td>
+                                    <td>${winner.score || 0}</td>
+                                    <td>${formatUSDC(winner.prize || 0)} USDC</td>
+                                    <td>${winner.percentage || 0}%</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                winnersTableHTML = '<p class="no-data-message">No winners recorded for this cycle.</p>';
+            }
+
+            card.innerHTML = `
+                <div class="cycle-header">
+                    <div>
+                        <div class="cycle-title">Cycle #${cycles.length - index}</div>
+                        <div class="cycle-info">${startDate} - ${endDate}</div>
+                    </div>
+                    <div>
+                        <span class="cycle-pool">💰 ${prizePool} USDC</span>
+                    </div>
+                </div>
+                <div class="cycle-info" style="margin-bottom: 15px;">
+                    👥 ${totalPlayers} players competed | 🏆 ${winners.length} winners
+                </div>
+                ${winnersTableHTML}
+            `;
+
+            return card;
+        }
+
+        // Mock data generator for testing (remove when real data is available)
+        async function generateMockData() {
+            // Check if we already have data
+            const existing = await db.collection('cycleHistory').limit(1).get();
+            if (!existing.empty) {
+                return; // Don't generate mock data if real data exists
+            }
+
+            // Generate a few mock cycles for demonstration
+            const mockCycles = [
+                {
+                    startDate: firebase.firestore.Timestamp.fromDate(new Date('2025-12-01')),
+                    endDate: firebase.firestore.Timestamp.fromDate(new Date('2025-12-31')),
+                    prizePool: 156.80,
+                    totalPlayers: 784,
+                    winners: [
+                        { wallet: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb', score: 487, prize: 62.72, percentage: 40 },
+                        { wallet: '0x8Bc6Cc7F1A3B4d5E6f7890abcdef123456789abc', score: 423, prize: 39.20, percentage: 25 },
+                        { wallet: '0x1234567890abcdef1234567890abcdef12345678', score: 398, prize: 23.52, percentage: 15 },
+                        { wallet: '0xabcdef1234567890abcdef1234567890abcdef12', score: 367, prize: 15.68, percentage: 10 },
+                        { wallet: '0x9876543210fedcba9876543210fedcba98765432', score: 341, prize: 7.84, percentage: 5 }
+                    ]
+                },
+                {
+                    startDate: firebase.firestore.Timestamp.fromDate(new Date('2025-11-01')),
+                    endDate: firebase.firestore.Timestamp.fromDate(new Date('2025-11-30')),
+                    prizePool: 203.40,
+                    totalPlayers: 1017,
+                    winners: [
+                        { wallet: '0x5432109876fedcba5432109876fedcba54321098', score: 512, prize: 81.36, percentage: 40 },
+                        { wallet: '0xfedcba9876543210fedcba9876543210fedcba98', score: 476, prize: 50.85, percentage: 25 },
+                        { wallet: '0x3456789abcdef1234567890abcdef123456789ab', score: 451, prize: 30.51, percentage: 15 }
+                    ]
+                }
+            ];
+
+            // Only add mock data in development/testing
+            console.log('No cycle history found. Mock data will appear when cycles are completed.');
+        }
+
+        // Initialize
+        loadArchive();
+        // generateMockData(); // Uncomment for testing with mock data
+    </script>
+</body>
+</html>

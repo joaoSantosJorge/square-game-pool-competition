@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Flappy Bird - Prize Pool Competition</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .game-page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--button-fg);
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid var(--button-border);
+            background: var(--button-bg);
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+            box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1);
+        }
+        .page-title {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            text-shadow: var(--score-shadow);
+            letter-spacing: 2px;
+            font-size: 32px;
+            margin: 0;
+        }
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        @media (max-width: 1100px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .game-section {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 25px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            padding: 10px 15px;
+            min-width: 120px;
+            text-align: center;
+        }
+        .stat-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 11px;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 22px;
+            color: var(--fg);
+            font-weight: bold;
+            text-shadow: var(--score-shadow);
+        }
+        .canvas-wrapper {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #game-canvas {
+            border: 3px solid var(--border);
+            background-color: var(--canvas-bg);
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 0 16px var(--shadow);
+            max-width: 100%;
+            height: auto;
+        }
+        .controls-section {
+            margin-top: 25px;
+        }
+        .controls-header {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 18px;
+            color: var(--fg);
+            font-weight: bold;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+        .controls-grid {
+            display: grid;
+            gap: 10px;
+        }
+        .wallet-section {
+            background: var(--bg);
+            border: 2px dashed var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .wallet-info-display {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 14px;
+            color: var(--fg);
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .info-card {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            padding: 15px;
+            text-align: center;
+        }
+        .info-card-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 11px;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .info-card-value {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 20px;
+            color: var(--fg);
+            font-weight: bold;
+        }
+        .prize-pool-big {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            border: 3px solid var(--pool-border);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 4px 4px 0 var(--button-shadow1), 8px 8px 0 var(--button-shadow2);
+        }
+        .prize-pool-big .label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .prize-pool-big .amount {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .prize-pool-big .amount::before {
+            content: '💰 ';
+        }
+        .cycle-timer-big {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .cycle-timer-big .label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 11px;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .cycle-timer-big .time {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 18px;
+            color: var(--fg);
+            font-weight: bold;
+        }
+        .sidebar-section {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 25px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        #leaderboard {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        #leaderboard h2 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+        #leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 15px;
+        }
+        #leaderboard-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--leaderboard-li-border);
+        }
+        #leaderboard-list li:last-child {
+            border-bottom: none;
+        }
+        button {
+            width: 100%;
+            margin: 0;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        .claim-reward-section {
+            margin-bottom: 20px;
+        }
+        #claim-reward-btn {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            border-color: var(--pool-border);
+            font-weight: bold;
+        }
+        #claim-reward-btn:hover:not(:disabled) {
+            background: var(--pool-fg);
+            color: var(--pool-bg);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-page-container">
+        <div class="nav-header">
+            <h1 class="page-title">🎮 PLAY GAME</h1>
+            <div class="nav-links">
+                <button id="toggle-mode-btn" style="margin: 0;">Toggle Light/Dark</button>
+                <a href="index.html">Home</a>
+                <a href="rules.html">Rules</a>
+                <a href="archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div class="game-layout">
+            <!-- Main Game Section -->
+            <div class="game-section">
+                <div class="game-header">
+                    <h2 style="margin:0;font-family:'Courier New',Courier,'Lucida Console',monospace;color:var(--fg);font-size:24px;letter-spacing:1px;">CURRENT SCORE</h2>
+                    <div class="stat-box">
+                        <div class="stat-value" id="score">0</div>
+                    </div>
+                </div>
+
+                <div class="game-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Tries Left</div>
+                        <div class="stat-value" id="tries-info">0</div>
+                    </div>
+                    <div class="stat-box" style="flex: 1; min-width: 200px;">
+                        <div class="stat-label">Wallet</div>
+                        <div class="stat-value" id="wallet-info" style="font-size: 14px; word-break: break-all;">Not Connected</div>
+                    </div>
+                </div>
+
+                <div class="canvas-wrapper">
+                    <canvas id="game-canvas" width="800" height="600"></canvas>
+                </div>
+
+                <div class="controls-section">
+                    <div class="controls-header">⚙️ Game Controls</div>
+                    <div class="controls-grid">
+                        <button id="start-btn">▶️ Start Game</button>
+                        <button id="pay-btn">💳 Pay to Play (0.02 USDC for 10 tries)</button>
+                        <button id="connect-wallet-btn">🔗 Connect Wallet</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Section -->
+            <div class="sidebar-section">
+                <div class="prize-pool-big">
+                    <div class="label">Prize Pool</div>
+                    <div class="amount" id="pool-amount">Loading...</div>
+                </div>
+
+                <div class="cycle-timer-big">
+                    <div class="label">⏰ Cycle Ends In</div>
+                    <div class="time" id="cycle-time">Loading...</div>
+                </div>
+
+                <div class="claim-reward-section">
+                    <button id="claim-reward-btn">🏆 Claim Reward</button>
+                </div>
+
+                <div id="leaderboard">
+                    <h2>🏅 Cycle Leaderboard</h2>
+                    <ul id="leaderboard-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Load Firebase first -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <!-- Then leaderboard, then game, then payments -->
+    <script src="js/leaderboard.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/payments.js"></script>
+    <!-- Then web3 and wallet providers -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/index.js"></script>
+</body>

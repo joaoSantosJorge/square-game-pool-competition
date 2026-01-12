@@ -237,3 +237,10 @@ h2, #wallet-info {
     opacity: 0.4;
     cursor: not-allowed;
 }
+
+/* Navigation links in game UI */
+#ui a:hover {
+    background: var(--button-fg) !important;
+    color: var(--button-bg) !important;
+    box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1) !important;
+}

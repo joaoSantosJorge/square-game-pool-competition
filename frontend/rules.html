@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Rules - Flappy Bird Prize Pool</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .rules-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .content-box {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--button-fg);
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid var(--button-border);
+            background: var(--button-bg);
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+            box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1);
+        }
+        h1 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            text-shadow: var(--score-shadow);
+            letter-spacing: 2px;
+            font-size: 32px;
+            margin: 0;
+        }
+        h2 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        h3 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p, ul, ol {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        ul, ol {
+            padding-left: 30px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .example-box {
+            background: var(--bg);
+            border: 2px dashed var(--border);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .allocation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+        }
+        .allocation-table th,
+        .allocation-table td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+        .allocation-table th {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .allocation-table td {
+            color: var(--fg);
+        }
+    </style>
+</head>
+<body>
+    <div class="rules-container">
+        <div class="nav-header">
+            <h1>📜 GAME RULES</h1>
+            <div class="nav-links">
+                <button id="toggle-mode-btn" style="margin: 0;">Toggle Light/Dark</button>
+                <a href="index.html">Home</a>
+                <a href="game.html">Play Game</a>
+                <a href="archive.html">Leaderboard Archive</a>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <h2>🎮 How to Play</h2>
+            <ol>
+                <li><strong>Connect Your Wallet:</strong> Connect using MetaMask, WalletConnect, or Coinbase Wallet to participate</li>
+                <li><strong>Purchase Tries:</strong> Pay <span class="highlight">0.02 USDC</span> to receive <span class="highlight">10 game tries</span></li>
+                <li><strong>Play & Score:</strong> Navigate the bird through pipes to achieve the highest score possible</li>
+                <li><strong>Compete:</strong> Your best score is automatically submitted to the monthly leaderboard</li>
+                <li><strong>Win Prizes:</strong> Top players share the prize pool at the end of each cycle</li>
+            </ol>
+        </div>
+
+        <div class="content-box">
+            <h2>⏰ Competition Cycles</h2>
+            <h3>Cycle Duration</h3>
+            <p>Each competition cycle runs for a configurable period (typically <span class="highlight">30 days</span>). The cycle timer is displayed in the top-left corner of the game.</p>
+            
+            <h3>Cycle Phases</h3>
+            <ul>
+                <li><strong>Active Phase:</strong> Players compete and scores are recorded on the leaderboard</li>
+                <li><strong>Allocation Phase:</strong> Admin allocates funds to winners based on final rankings</li>
+                <li><strong>Claim Phase:</strong> Winners have 7 days to claim their rewards</li>
+                <li><strong>Reset Phase:</strong> New cycle begins with a fresh leaderboard and prize pool</li>
+            </ul>
+        </div>
+
+        <div class="content-box">
+            <h2>💰 Prize Pool Distribution</h2>
+            
+            <h3>Pool Accumulation</h3>
+            <p>The prize pool grows from:</p>
+            <ul>
+                <li>Player entry fees (<span class="highlight">0.02 USDC</span> per 10 tries)</li>
+                <li>Direct donations to the contract</li>
+                <li>Unclaimed rewards from previous cycles (if not claimed within 7 days)</li>
+            </ul>
+
+            <h3>Winner Allocation</h3>
+            <p>At the end of each cycle, the admin allocates the prize pool to the top players. The allocation structure is configurable but typically follows this pattern:</p>
+            
+            <table class="allocation-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Allocation %</th>
+                        <th>Example (100 USDC Pool)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1st Place</td>
+                        <td>40%</td>
+                        <td>40 USDC</td>
+                    </tr>
+                    <tr>
+                        <td>2nd Place</td>
+                        <td>25%</td>
+                        <td>25 USDC</td>
+                    </tr>
+                    <tr>
+                        <td>3rd Place</td>
+                        <td>15%</td>
+                        <td>15 USDC</td>
+                    </tr>
+                    <tr>
+                        <td>4th Place</td>
+                        <td>10%</td>
+                        <td>10 USDC</td>
+                    </tr>
+                    <tr>
+                        <td>5th Place</td>
+                        <td>5%</td>
+                        <td>5 USDC</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Admin Fee</strong></td>
+                        <td><strong>5%</strong></td>
+                        <td><strong>5 USDC</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <h3>📊 Real Example</h3>
+                <p><strong>Scenario:</strong> 500 players each paid 0.02 USDC to play</p>
+                <ul>
+                    <li>Total Pool: 500 × 0.02 = <span class="highlight">10 USDC</span></li>
+                    <li>1st Place: 4.00 USDC (40%)</li>
+                    <li>2nd Place: 2.50 USDC (25%)</li>
+                    <li>3rd Place: 1.50 USDC (15%)</li>
+                    <li>4th Place: 1.00 USDC (10%)</li>
+                    <li>5th Place: 0.50 USDC (5%)</li>
+                    <li>Admin Fee: 0.50 USDC (5%)</li>
+                </ul>
+            </div>
+
+            <h3>Flexible Allocation</h3>
+            <p>The admin can configure:</p>
+            <ul>
+                <li>Number of winners (1-10 positions)</li>
+                <li>Percentage allocation for each position</li>
+                <li>Admin fee percentage</li>
+                <li>All percentages must total exactly 100%</li>
+            </ul>
+        </div>
+
+        <div class="content-box">
+            <h2>🏆 Claiming Rewards</h2>
+            <ul>
+                <li>Winners can claim rewards by clicking the <span class="highlight">"Claim Reward"</span> button</li>
+                <li>Rewards are sent directly to your connected wallet</li>
+                <li>You have <span class="highlight">7 days</span> after allocation to claim your reward</li>
+                <li>Unclaimed rewards after 7 days return to the prize pool</li>
+                <li>No transaction fees - you receive the full allocated amount</li>
+            </ul>
+        </div>
+
+        <div class="content-box">
+            <h2>⚠️ Important Rules</h2>
+            <ul>
+                <li><strong>Fair Play:</strong> Scores are validated server-side to prevent cheating</li>
+                <li><strong>One Wallet, One Entry:</strong> Each wallet address gets one entry on the leaderboard (highest score)</li>
+                <li><strong>Monthly Reset:</strong> Leaderboard resets at the end of each cycle</li>
+                <li><strong>Smart Contract:</strong> All funds are held and distributed via a transparent smart contract on Base network</li>
+                <li><strong>No Refunds:</strong> Entry fees are non-refundable once paid</li>
+                <li><strong>Admin Controls:</strong> Admin can adjust cycle timing, winner count, and allocation percentages</li>
+            </ul>
+        </div>
+
+        <div class="content-box">
+            <h2>🔧 Technical Details</h2>
+            <h3>Smart Contract</h3>
+            <ul>
+                <li><strong>Network:</strong> Base (Ethereum Layer 2)</li>
+                <li><strong>Payment Token:</strong> USDC (6 decimals)</li>
+                <li><strong>Contract Features:</strong> Automated prize distribution, secure fund management</li>
+            </ul>
+
+            <h3>Score Validation</h3>
+            <ul>
+                <li>All scores are submitted to Firebase Cloud Functions</li>
+                <li>Server-side validation prevents score manipulation</li>
+                <li>Invalid scores are automatically rejected</li>
+            </ul>
+        </div>
+
+        <div class="content-box">
+            <h2>❓ FAQ</h2>
+            
+            <h3>Can I play without connecting a wallet?</h3>
+            <p>You can play in practice mode, but to compete on the leaderboard and win prizes, you must connect a wallet and pay the entry fee.</p>
+            
+            <h3>What happens if there's a tie?</h3>
+            <p>Rankings are determined by score and timestamp. If two players have the same score, the player who achieved it first ranks higher.</p>
+            
+            <h3>Can I submit multiple scores?</h3>
+            <p>Yes! You can play as many times as you have tries. Only your highest score appears on the leaderboard.</p>
+            
+            <h3>How do I know when the cycle ends?</h3>
+            <p>The countdown timer is displayed in the top-left corner of the game screen.</p>
+            
+            <h3>Is this game provably fair?</h3>
+            <p>Yes! All prize distributions happen through a public smart contract on the blockchain. You can verify all transactions and allocations.</p>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const toggleBtn = document.getElementById('toggle-mode-btn');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+        
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+        });
+    </script>
+</body>
+</html>

@@ -3,44 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird with Micropayments</title>
+    <title>Flappy Bird Prize Pool - Compete & Win USDC</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .welcome-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .hero-section {
+            margin-bottom: 50px;
+        }
+        .logo {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--fg);
+            text-shadow: var(--score-shadow);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .tagline {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 20px;
+            color: var(--fg);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .live-pool {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            border: 3px solid var(--pool-border);
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 500px;
+            box-shadow: 4px 4px 0 var(--button-shadow1), 8px 8px 0 var(--button-shadow2);
+            transition: all 0.3s;
+        }
+        .live-pool-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        .live-pool-amount {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .live-pool-amount::before {
+            content: '💰 ';
+        }
+        .cycle-timer {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 16px;
+            margin-top: 15px;
+            opacity: 0.85;
+        }
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        .cta-btn {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 20px;
+            padding: 18px 36px;
+            border: 3px solid var(--button-border);
+            background: var(--button-bg);
+            color: var(--button-fg);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            box-shadow: 4px 4px 0 var(--button-shadow1), 8px 8px 0 var(--button-shadow2);
+            transition: all 0.2s;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .cta-btn:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+            box-shadow: 4px 4px 0 var(--button-shadow2), 8px 8px 0 var(--button-shadow1);
+            transform: translate(-2px, -2px);
+        }
+        .cta-btn-primary {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            border-color: var(--pool-border);
+        }
+        .cta-btn-primary:hover {
+            background: var(--pool-fg);
+            color: var(--pool-bg);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+        .feature-card {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 30px 20px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--shadow);
+        }
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .feature-title {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--fg);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .feature-desc {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 14px;
+            color: var(--fg);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        .how-it-works {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 40px 30px;
+            margin: 50px 0;
+            box-shadow: 0 0 8px var(--shadow);
+        }
+        .how-it-works h2 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 28px;
+            color: var(--fg);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        .step {
+            position: relative;
+        }
+        .step-number {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--pool-bg);
+            text-shadow: 2px 2px 0 var(--fg);
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--fg);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .step-desc {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 13px;
+            color: var(--fg);
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+        .nav-top {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .stats-banner {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            padding: 25px;
+            background: var(--bg);
+            border: 2px dashed var(--border);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--fg);
+            text-shadow: var(--score-shadow);
+        }
+        .stat-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 12px;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 32px;
+            }
+            .tagline {
+                font-size: 16px;
+            }
+            .live-pool-amount {
+                font-size: 36px;
+            }
+            .cta-btn {
+                font-size: 16px;
+                padding: 14px 28px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="cycle-time-display">
-            <div class="pool-label">Cycle Ends In</div>
-            <div class="pool-amount" id="cycle-time">Loading...</div>
+    <div class="welcome-container">
+        <div class="nav-top">
+            <button id="toggle-mode-btn">Toggle Light/Dark</button>
         </div>
-        <button id="claim-reward-btn" class="claim-btn">Claim Reward</button>
-        <div id="prize-pool-display">
-            <div class="pool-label">Prize Pool</div>
-            <div class="pool-amount" id="pool-amount">Loading...</div>
+
+        <div class="hero-section">
+            <div class="logo">
+                🐦 FLAPPY BIRD<br>PRIZE POOL
+            </div>
+            <div class="tagline">
+                COMPETE • WIN USDC • MONTHLY CYCLES
+            </div>
+
+            <div class="live-pool">
+                <div class="live-pool-label">Current Prize Pool</div>
+                <div class="live-pool-amount" id="pool-amount">Loading...</div>
+                <div class="cycle-timer" id="cycle-timer">
+                    Cycle ends in: <span id="time-remaining">Loading...</span>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="game.html" class="cta-btn cta-btn-primary">🎮 Play Now</a>
+                <a href="rules.html" class="cta-btn">📜 Rules</a>
+                <a href="archive.html" class="cta-btn">📊 Archive</a>
+            </div>
         </div>
-        <canvas id="game-canvas" width="800" height="600"></canvas>
-        <div id="ui">
-            <button id="toggle-mode-btn" style="float:right;margin-bottom:8px;">Toggle Light/Dark</button>
-            <div id="wallet-info">Wallet: Not connected</div>
-            <div id="tries-info">Tries Remaining: 0</div>
-            <div id="score">Score: 0</div>
-            <button id="start-btn">Start Game</button>
-            <button id="pay-btn">Pay to Play (0.02 USDC for 10 tries)</button>
-            <button id="connect-wallet-btn">Connect Wallet</button>
+
+        <div class="stats-banner">
+            <div class="stat-item">
+                <div class="stat-value" id="total-players">-</div>
+                <div class="stat-label">Players This Cycle</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="top-score">-</div>
+                <div class="stat-label">Highest Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="total-cycles">-</div>
+                <div class="stat-label">Completed Cycles</div>
+            </div>
         </div>
-        <div id="leaderboard">
-            <h2>Monthly Leaderboard</h2>
-            <ul id="leaderboard-list"></ul>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <div class="feature-title">Win Real USDC</div>
+                <div class="feature-desc">
+                    Top players share the monthly prize pool. Winners receive USDC directly to their wallet.
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">Blockchain Secured</div>
+                <div class="feature-desc">
+                    Smart contract on Base network ensures transparent and secure prize distribution.
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Low Entry Cost</div>
+                <div class="feature-desc">
+                    Just 0.02 USDC for 10 tries. Affordable competition with real rewards.
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-title">Fair Competition</div>
+                <div class="feature-desc">
+                    Server-side score validation prevents cheating. May the best player win!
+                </div>
+            </div>
+        </div>
+
+        <div class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Connect Wallet</div>
+                    <div class="step-desc">
+                        Link your MetaMask, WalletConnect, or Coinbase Wallet
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Pay to Play</div>
+                    <div class="step-desc">
+                        0.02 USDC gets you 10 tries to set your best score
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Compete</div>
+                    <div class="step-desc">
+                        Navigate pipes, score points, climb the leaderboard
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Win Prizes</div>
+                    <div class="step-desc">
+                        Top players share the prize pool at cycle end
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-buttons" style="margin-top: 50px;">
+            <a href="game.html" class="cta-btn cta-btn-primary">🚀 Start Playing Now</a>
+        </div>
+
+        <div style="margin-top: 60px; padding: 20px; border-top: 2px dashed var(--border);">
+            <p style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); opacity: 0.7; font-size: 12px;">
+                Built on Base • Powered by Smart Contracts • Provably Fair
+            </p>
         </div>
     </div>
-    <!-- Load Firebase first -->
+
+    <!-- Load Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <!-- Then leaderboard, then game, then payments -->
-    <script src="js/leaderboard.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/payments.js"></script>
-    <!-- Then web3 and wallet providers -->
+    <!-- Load Web3 for reading contract -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/index.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCprQvJl7-ZC-6QK4ct5tBngJzOgF33MpM",
+            authDomain: "flappy-bird-leaderboard-463e0.firebaseapp.com",
+            projectId: "flappy-bird-leaderboard-463e0",
+            storageBucket: "flappy-bird-leaderboard-463e0.firebasestorage.app",
+            messagingSenderId: "344067272312",
+            appId: "1:344067272312:web:5d4fc513df1df38a87c78d",
+            measurementId: "G-YM6Z2TPHG8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Connect to Firestore emulator if running locally
+        if (location.hostname === "localhost") {
+            db.useEmulator("localhost", 8080);
+            console.log("Using Firestore emulator at localhost:8080");
+        }
+
+        // Theme toggle functionality
+        const toggleBtn = document.getElementById('toggle-mode-btn');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+        
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // Contract configuration
+        const contractAddress = '0x6f265b0356EE48d7BDe38d7fB27AAAc2E6bBd5FB'; // Base Sepolia testnet
+        const rpcUrl = 'https://sepolia.base.org';
+
+        // Load prize pool from smart contract
+        async function loadPrizePool() {
+            try {
+                const web3 = new Web3(rpcUrl);
+                const contractABI = [
+                    {
+                        "inputs": [],
+                        "name": "totalPool",
+                        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+                ];
+                
+                const contract = new web3.eth.Contract(contractABI, contractAddress);
+                const totalPoolWei = await contract.methods.totalPool().call();
+                const totalPoolUSDC = parseFloat(totalPoolWei) / 1000000; // USDC has 6 decimals
+                
+                document.getElementById('pool-amount').textContent = totalPoolUSDC.toFixed(2) + ' USDC';
+            } catch (error) {
+                console.error('Error loading prize pool:', error);
+                document.getElementById('pool-amount').textContent = '-.-- USDC';
+            }
+        }
+
+        // Load cycle time from Firebase
+        async function loadCycleTime() {
+            try {
+                const configDoc = await db.collection('config').doc('cycle').get();
+                if (configDoc.exists) {
+                    const data = configDoc.data();
+                    const endTime = data.endTime?.toDate();
+                    
+                    if (endTime) {
+                        updateCountdown(endTime);
+                        setInterval(() => updateCountdown(endTime), 1000);
+                    } else {
+                        document.getElementById('time-remaining').textContent = 'Not configured';
+                    }
+                } else {
+                    document.getElementById('time-remaining').textContent = 'Not configured';
+                }
+            } catch (error) {
+                console.error('Error loading cycle time:', error);
+                document.getElementById('time-remaining').textContent = 'Error loading';
+            }
+        }
+
+        function updateCountdown(endTime) {
+            const now = new Date();
+            const diff = endTime - now;
+            
+            if (diff <= 0) {
+                document.getElementById('time-remaining').textContent = 'Cycle ended';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('time-remaining').textContent = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        // Load leaderboard stats
+        async function loadStats() {
+            try {
+                // Get current month leaderboard
+                const now = new Date();
+                const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+                const leaderboardSnapshot = await db.collection('leaderboard')
+                    .doc(monthKey)
+                    .collection('scores')
+                    .orderBy('score', 'desc')
+                    .limit(1)
+                    .get();
+                
+                let topScore = 0;
+                let totalPlayers = 0;
+                
+                if (!leaderboardSnapshot.empty) {
+                    const allScores = await db.collection('leaderboard')
+                        .doc(monthKey)
+                        .collection('scores')
+                        .get();
+                    
+                    totalPlayers = allScores.size;
+                    topScore = leaderboardSnapshot.docs[0].data().score;
+                }
+                
+                document.getElementById('total-players').textContent = totalPlayers;
+                document.getElementById('top-score').textContent = topScore;
+
+                // Get total cycles from history
+                const cyclesSnapshot = await db.collection('cycleHistory').get();
+                document.getElementById('total-cycles').textContent = cyclesSnapshot.size;
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('total-players').textContent = '-';
+                document.getElementById('top-score').textContent = '-';
+                document.getElementById('total-cycles').textContent = '-';
+            }
+        }
+
+        // Initialize
+        loadPrizePool();
+        loadCycleTime();
+        loadStats();
+
+        // Refresh prize pool every 30 seconds
+        setInterval(loadPrizePool, 30000);
+    </script>
 </body>
+</html>
