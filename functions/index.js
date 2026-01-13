@@ -421,7 +421,7 @@ exports.recordPayment = functions.https.onRequest(async (req, res) => {
     });
 
     console.log(
-      `Payment recorded: ${walletAddress} - ${amountUSDC} USDC (Donation: ${isDonation})`
+      `Payment recorded: ${walletAddress} - ${amountUSDC} USDC (Donation: ${isDonation})`,
     );
 
     res.status(200).json({
