@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Square Game Prize Pool</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--button-fg);
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid var(--button-border);
+            background: var(--button-bg);
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+            box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1);
+        }
+        h1 {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            text-shadow: var(--score-shadow);
+            letter-spacing: 2px;
+            font-size: 32px;
+            margin: 0;
+        }
+        .wallet-header {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+            text-align: center;
+        }
+        .wallet-address {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 18px;
+            color: var(--fg);
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        .wallet-status {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 14px;
+            color: var(--fg);
+            opacity: 0.8;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 20px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .stat-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .stat-value {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: var(--score-shadow);
+        }
+        .current-rank-card {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            border: 2px solid var(--pool-border);
+        }
+        .current-rank-card .stat-label {
+            color: var(--pool-fg);
+            opacity: 0.9;
+        }
+        .current-rank-card .stat-value {
+            color: var(--pool-fg);
+            text-shadow: none;
+        }
+        .section-card {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 8px var(--shadow);
+            transition: background 0.3s, border 0.3s;
+        }
+        .section-title {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .cycle-history-item {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            padding: 20px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+        .cycle-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .cycle-detail {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 14px;
+            color: var(--fg);
+        }
+        .cycle-detail-label {
+            opacity: 0.7;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .cycle-detail-value {
+            font-weight: bold;
+            margin-top: 3px;
+        }
+        .cycle-name {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 16px;
+            color: var(--fg);
+            font-weight: bold;
+            opacity: 0.9;
+        }
+        .loading-message, .error-message, .no-data-message {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+        .error-message {
+            color: #ff6b6b;
+        }
+        .wallet-connection {
+            background: var(--pool-bg);
+            color: var(--pool-fg);
+            border: 2px solid var(--pool-border);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 4px 4px 0 var(--button-shadow1), 8px 8px 0 var(--button-shadow2);
+        }
+        .wallet-connection h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+        }
+        .wallet-connection p {
+            margin-bottom: 20px;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            opacity: 0.9;
+        }
+        .connect-wallet-btn {
+            background: var(--button-bg);
+            color: var(--button-fg);
+            border: 2px solid var(--button-border);
+            padding: 12px 24px;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+            transition: all 0.2s;
+        }
+        .connect-wallet-btn:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+            box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1);
+        }
+        .unauthorized-access {
+            background: #ff6b6b;
+            color: white;
+            border: 2px solid #ff5252;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .unauthorized-access h2 {
+            margin-top: 0;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="nav-header">
+            <h1>👤 USER PROFILE</h1>
+            <div class="nav-links">
+                <button id="toggle-mode-btn" style="margin: 0;">Toggle Light/Dark</button>
+                <a href="index.html">Home</a>
+                <a href="game.html">Play Game</a>
+                <a href="rules.html">Rules</a>
+                <a href="archive.html">Archive</a>
+            </div>
+        </div>
+
+        <!-- Wallet Connection Required -->
+        <div class="wallet-connection" id="wallet-connection" style="display: none;">
+            <h2>🔗 Connect Your Wallet</h2>
+            <p>To view your profile, please connect your wallet first.</p>
+            <button class="connect-wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+        </div>
+
+        <!-- Unauthorized Access -->
+        <div class="unauthorized-access" id="unauthorized-access" style="display: none;">
+            <h2>🚫 Unauthorized Access</h2>
+            <p>You can only view your own profile. Please connect the wallet that matches this URL.</p>
+            <p>URL Wallet: <span id="url-wallet"></span></p>
+            <p>Connected Wallet: <span id="connected-wallet"></span></p>
+        </div>
+
+        <!-- Profile Content -->
+        <div id="profile-content" style="display: none;">
+            <div class="wallet-header">
+                <div class="wallet-address" id="profile-wallet">Loading...</div>
+                <div class="wallet-status" id="wallet-status">✅ Wallet Verified</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card current-rank-card">
+                    <div class="stat-label">Current Rank</div>
+                    <div class="stat-value" id="current-rank">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">All-Time Best Score</div>
+                    <div class="stat-value" id="best-score">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Donations</div>
+                    <div class="stat-value" id="total-donations">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Games Played</div>
+                    <div class="stat-value" id="total-games">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Cycles Participated</div>
+                    <div class="stat-value" id="cycles-participated">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Tries Purchased</div>
+                    <div class="stat-value" id="total-tries">-</div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">🎮 Current Cycle Performance</div>
+                <div id="current-cycle-stats">
+                    <div class="loading-message">Loading current cycle data...</div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">📊 Cycle History</div>
+                <div id="cycle-history">
+                    <div class="loading-message">Loading cycle history...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading state -->
+        <div class="loading-message" id="loading-state">
+            Loading profile data...
+        </div>
+
+        <!-- Error state -->
+        <div class="error-message" id="error-state" style="display: none;">
+            <h2>❌ Profile Not Found</h2>
+            <p>This wallet address has no game history yet.</p>
+            <p>Connect your wallet and play the game to create your profile!</p>
+        </div>
+    </div>
+
+    <!-- Load Web3 and wallet providers first -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/index.js"></script>
+    
+    <script>
+        // Global variables
+        let web3;
+        let userAccount;
+        let targetWallet; // Wallet from URL
+
+        // Theme toggle functionality
+        const toggleBtn = document.getElementById('toggle-mode-btn');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+        
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        // Get wallet address from URL path
+        function getWalletFromURL() {
+            const path = window.location.pathname;
+            // Remove leading slash and check if it looks like a wallet address
+            const address = path.substring(1);
+            if (address.match(/^0x[a-fA-F0-9]{40}$/)) {
+                return address;
+            }
+            // Fallback to query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('wallet');
+        }
+
+        // Truncate wallet address for display
+        function truncateAddress(address) {
+            if (!address) return 'Unknown';
+            if (address.length < 12) return address;
+            return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+        }
+
+        // Format date helper
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Unknown';
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Format cycle name for display
+        function formatCycleName(cycleName) {
+            if (!cycleName) return 'Unknown';
+            // Convert scores_28-12-2025_to_04-01-2026 to "Dec 28, 2025 - Jan 4, 2026"
+            const match = cycleName.match(/scores_(\d{2})-(\d{2})-(\d{4})_to_(\d{2})-(\d{2})-(\d{4})/);
+            if (match) {
+                const startDate = new Date(match[3], match[2] - 1, match[1]);
+                const endDate = new Date(match[6], match[5] - 1, match[4]);
+                return startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+                       ' - ' +
+                       endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+            return cycleName;
+        }
+
+        // Initialize MetaMask connection
+        async function initMetaMask() {
+            if (typeof window.ethereum !== 'undefined') {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await web3.eth.getAccounts();
+                    userAccount = accounts[0];
+                    console.log('Connected account:', userAccount);
+                    checkWalletAccess();
+                } catch (error) {
+                    console.error('User denied account access');
+                }
+            } else {
+                console.error('MetaMask not detected');
+            }
+        }
+
+        // Connect wallet function
+        async function connectWallet() {
+            // Simple MetaMask connection for now
+            await initMetaMask();
+        }
+
+        // Check if connected wallet matches URL wallet
+        function checkWalletAccess() {
+            if (!targetWallet) {
+                showError('Invalid URL: No wallet address specified');
+                return;
+            }
+
+            if (!userAccount) {
+                showWalletConnection();
+                return;
+            }
+
+            // Compare wallet addresses (case insensitive)
+            if (userAccount.toLowerCase() !== targetWallet.toLowerCase()) {
+                showUnauthorizedAccess();
+                return;
+            }
+
+            // Authorized - load profile
+            loadProfile();
+        }
+
+        // Show wallet connection required
+        function showWalletConnection() {
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('profile-content').style.display = 'none';
+            document.getElementById('unauthorized-access').style.display = 'none';
+            document.getElementById('wallet-connection').style.display = 'block';
+        }
+
+        // Show unauthorized access
+        function showUnauthorizedAccess() {
+            document.getElementById('url-wallet').textContent = truncateAddress(targetWallet);
+            document.getElementById('connected-wallet').textContent = truncateAddress(userAccount);
+            
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('profile-content').style.display = 'none';
+            document.getElementById('wallet-connection').style.display = 'none';
+            document.getElementById('unauthorized-access').style.display = 'block';
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('profile-content').style.display = 'none';
+            document.getElementById('wallet-connection').style.display = 'none';
+            document.getElementById('unauthorized-access').style.display = 'none';
+            document.getElementById('error-state').style.display = 'block';
+            document.getElementById('error-state').querySelector('p').textContent = message;
+        }
+
+        // Load user profile
+        async function loadProfile() {
+            try {
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('wallet-connection').style.display = 'none';
+                document.getElementById('unauthorized-access').style.display = 'none';
+                document.getElementById('error-state').style.display = 'none';
+                document.getElementById('profile-content').style.display = 'block';
+
+                // Update wallet display
+                document.getElementById('profile-wallet').textContent = targetWallet;
+
+                // Load user profile
+                const profileResponse = await fetch(
+                    `https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net/getUserProfile?wallet=${targetWallet}`
+                );
+                
+                if (!profileResponse.ok) {
+                    if (profileResponse.status === 404) {
+                        showError('This wallet has no game history yet. Play the game to create your profile!');
+                        return;
+                    }
+                    throw new Error(`HTTP ${profileResponse.status}`);
+                }
+
+                const profileData = await profileResponse.json();
+
+                if (!profileData.success) {
+                    showError(profileData.message || 'Failed to load profile');
+                    return;
+                }
+
+                // Load user rank
+                const rankResponse = await fetch(
+                    `https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net/getUserRank?wallet=${targetWallet}`
+                );
+                let rankData = null;
+                if (rankResponse.ok) {
+                    rankData = await rankResponse.json();
+                }
+
+                // Update profile display
+                updateProfileDisplay(profileData.profile, rankData);
+
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showError('Failed to load profile data. Please try again.');
+            }
+        }
+
+        // Update profile display
+        function updateProfileDisplay(profile, rankData) {
+            const summary = profile.summary;
+
+            // Update summary stats
+            document.getElementById('current-rank').textContent = 
+                rankData && rankData.rank ? `#${rankData.rank}/${rankData.totalPlayers}` : 'Not ranked';
+            document.getElementById('best-score').textContent = summary.allTimeBestScore || 0;
+            document.getElementById('total-donations').textContent = `$${(summary.totalDonationsUSDC || 0).toFixed(2)}`;
+            document.getElementById('total-games').textContent = summary.totalGamesPlayed || 0;
+            document.getElementById('cycles-participated').textContent = summary.cyclesParticipated || 0;
+            document.getElementById('total-tries').textContent = summary.totalTries || 0;
+
+            // Update current cycle stats
+            const currentCycleStats = profile.currentCycleStats;
+            const currentCycleContainer = document.getElementById('current-cycle-stats');
+            
+            if (currentCycleStats) {
+                currentCycleContainer.innerHTML = `
+                    <div class="cycle-info">
+                        <div class="cycle-detail">
+                            <div class="cycle-detail-label">Cycle</div>
+                            <div class="cycle-detail-value">${formatCycleName(profile.currentCycle)}</div>
+                        </div>
+                        <div class="cycle-detail">
+                            <div class="cycle-detail-label">Highest Score</div>
+                            <div class="cycle-detail-value">${currentCycleStats.highestScore || 0}</div>
+                        </div>
+                        <div class="cycle-detail">
+                            <div class="cycle-detail-label">Games Played</div>
+                            <div class="cycle-detail-value">${currentCycleStats.gamesPlayed || 0}</div>
+                        </div>
+                        <div class="cycle-detail">
+                            <div class="cycle-detail-label">Donations</div>
+                            <div class="cycle-detail-value">$${(currentCycleStats.donationsUSDC || 0).toFixed(2)}</div>
+                        </div>
+                        <div class="cycle-detail">
+                            <div class="cycle-detail-label">Tries Used</div>
+                            <div class="cycle-detail-value">${currentCycleStats.tries || 0}</div>
+                        </div>
+                        <div class="cycle-detail">
+                            <div class="cycle-detail-label">Current Rank</div>
+                            <div class="cycle-detail-value">${rankData && rankData.rank ? `#${rankData.rank}` : 'Not ranked'}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                currentCycleContainer.innerHTML = `
+                    <div class="no-data-message">No activity in the current cycle yet. Start playing to see your stats!</div>
+                `;
+            }
+
+            // Update cycle history
+            const cycleHistory = profile.cycleHistory;
+            const historyContainer = document.getElementById('cycle-history');
+            
+            if (cycleHistory && cycleHistory.length > 0) {
+                historyContainer.innerHTML = cycleHistory.map(cycle => `
+                    <div class="cycle-history-item">
+                        <div class="cycle-info">
+                            <div class="cycle-detail">
+                                <div class="cycle-detail-label">Cycle Period</div>
+                                <div class="cycle-detail-value">${formatCycleName(cycle.cycleName)}</div>
+                            </div>
+                            <div class="cycle-detail">
+                                <div class="cycle-detail-label">Best Score</div>
+                                <div class="cycle-detail-value">${cycle.highestScore || 0}</div>
+                            </div>
+                            <div class="cycle-detail">
+                                <div class="cycle-detail-label">Games Played</div>
+                                <div class="cycle-detail-value">${cycle.gamesPlayed || 0}</div>
+                            </div>
+                            <div class="cycle-detail">
+                                <div class="cycle-detail-label">Donations</div>
+                                <div class="cycle-detail-value">$${(cycle.donationsUSDC || 0).toFixed(2)}</div>
+                            </div>
+                            <div class="cycle-detail">
+                                <div class="cycle-detail-label">Tries Purchased</div>
+                                <div class="cycle-detail-value">${cycle.tries || 0}</div>
+                            </div>
+                            <div class="cycle-detail">
+                                <div class="cycle-detail-label">Active Period</div>
+                                <div class="cycle-detail-value">
+                                    ${formatDate(cycle.firstPlayedAt)} - ${formatDate(cycle.lastPlayedAt)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                historyContainer.innerHTML = `
+                    <div class="no-data-message">No cycle history yet. Complete a cycle to see historical data!</div>
+                `;
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            targetWallet = getWalletFromURL();
+            
+            if (!targetWallet) {
+                showError('Invalid URL: Please specify a wallet address like /app/0x123...');
+                return;
+            }
+
+            // Try to auto-connect wallet if available
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+                userAccount = window.ethereum.selectedAddress;
+                checkWalletAccess();
+            } else {
+                showWalletConnection();
+            }
+
+            // Listen for wallet changes
+            if (typeof window.ethereum !== 'undefined') {
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    userAccount = accounts[0];
+                    checkWalletAccess();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

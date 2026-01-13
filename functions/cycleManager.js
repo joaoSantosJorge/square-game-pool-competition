@@ -269,7 +269,8 @@ async function saveCycleMetadata(cycleStartTime, cycleEndTime, prizePool, winner
   };
 
   await db.collection("cycleMetadata").doc(cycleName).set(metadata);
-  console.log(`Cycle metadata saved: ${uniquePlayers.size} players, ${web3.utils.fromWei(prizePool, "mwei")} USDC`);
+  console.log(`Cycle metadata saved: ${uniquePlayers.size} players, ` +
+    `${web3.utils.fromWei(prizePool, "mwei")} USDC`);
 
   return metadata;
 }

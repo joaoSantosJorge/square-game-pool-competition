@@ -19,7 +19,7 @@ exports.forceAllocate = cycleManager.forceAllocate;
 /**
  * Get or create user profile
  * @param {string} walletAddress - The user's wallet address
- * @returns {Object} User profile data
+ * @return {Object} User profile data
  */
 async function getOrCreateUserProfile(walletAddress) {
   const userRef = db.collection("userProfiles").doc(walletAddress.toLowerCase());
@@ -47,7 +47,7 @@ async function getOrCreateUserProfile(walletAddress) {
 
 /**
  * Get current cycle name from cycleState
- * @returns {string} Current cycle name in format scores_DD-MM-YYYY_to_DD-MM-YYYY
+ * @return {string} Current cycle name in format scores_DD-MM-YYYY_to_DD-MM-YYYY
  */
 async function getCurrentCycleName() {
   const cycleDoc = await db.collection("cycleState").doc("current").get();
@@ -62,6 +62,8 @@ async function getCurrentCycleName() {
 
 /**
  * Format timestamp to DD-MM-YYYY
+ * @param {number} timestamp - The timestamp to format
+ * @return {string} Formatted date string
  */
 function formatDate(timestamp) {
   const date = new Date(timestamp);

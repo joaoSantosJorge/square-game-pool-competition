@@ -190,6 +190,7 @@
                 <a href="index.html">Home</a>
                 <a href="game.html">Play Game</a>
                 <a href="rules.html">Rules</a>
+                <a href="#" id="profile-link">Profile</a>
             </div>
         </div>
 
@@ -453,6 +454,16 @@
 
         // Initialize
         loadArchive();
+
+        // Profile link handler
+        document.getElementById('profile-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+                window.location.href = `profile.html?wallet=${window.ethereum.selectedAddress}`;
+            } else {
+                alert('Please connect your wallet first to view your profile.');
+            }
+        });
     </script>
 </body>
 </html>

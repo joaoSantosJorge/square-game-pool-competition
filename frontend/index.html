@@ -247,8 +247,8 @@
         </div>
 
         <div class="hero-section">
-            <div class="logo">
-                🟦 SQUARE GAME<br>PRIZE POOL
+            <div class="logo" id="logo">
+                ⬜ SQUARE GAME<br>PRIZE POOL
             </div>
             <div class="tagline">
                 COMPETE • WIN USDC • MONTHLY CYCLES
@@ -266,6 +266,7 @@
                 <a href="game.html" class="cta-btn cta-btn-primary">🎮 Play Now</a>
                 <a href="rules.html" class="cta-btn">📜 Rules</a>
                 <a href="archive.html" class="cta-btn">📊 Archive</a>
+                <a href="#" class="cta-btn" id="profile-link">👤 Profile</a>
             </div>
         </div>
 
@@ -397,10 +398,23 @@
             document.body.classList.add('light-mode');
         }
         
+        // Update logo based on theme
+        function updateLogoSquare() {
+            const logo = document.getElementById('logo');
+            if (document.body.classList.contains('light-mode')) {
+                logo.innerHTML = '⬛ SQUARE GAME<br>PRIZE POOL';
+            } else {
+                logo.innerHTML = '⬜ SQUARE GAME<br>PRIZE POOL';
+            }
+        }
+        
+        updateLogoSquare();
+        
         toggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
             const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
             localStorage.setItem('theme', currentTheme);
+            updateLogoSquare();
         });
 
         // Contract configuration
@@ -539,6 +553,16 @@
 
         // Refresh prize pool every 30 seconds
         setInterval(loadPrizePool, 30000);
+
+        // Profile link handler
+        document.getElementById('profile-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+                window.location.href = `profile.html?wallet=${window.ethereum.selectedAddress}`;
+            } else {
+                alert('Please connect your wallet first to view your profile.');
+            }
+        });
     </script>
 </body>
 </html>

@@ -332,6 +332,7 @@
                 <a href="index.html">Home</a>
                 <a href="rules.html">Rules</a>
                 <a href="archive.html">Archive</a>
+                <a href="#" id="profile-link">Profile</a>
             </div>
         </div>
 
@@ -422,6 +423,16 @@
             
             content.classList.toggle('collapsed');
             toggle.classList.toggle('collapsed');
+        });
+
+        // Profile link handler
+        document.getElementById('profile-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof userAccount !== 'undefined' && userAccount) {
+                window.location.href = `profile.html?wallet=${userAccount}`;
+            } else {
+                alert('Please connect your wallet first to view your profile.');
+            }
         });
     </script>
 </body>
