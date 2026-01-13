@@ -377,7 +377,7 @@ exports.recordPayment = functions.https.onRequest(async (req, res) => {
   }
 
   try {
-    const {walletAddress, amountUSDC, transactionHash} = req.body;
+    const {walletAddress, amountUSDC, transactionHash, isDonation} = req.body;
 
     // Validation
     if (!walletAddress || typeof walletAddress !== "string") {
@@ -397,8 +397,17 @@ exports.recordPayment = functions.https.onRequest(async (req, res) => {
       return;
     }
 
-    // Record the payment in user stats
-    const stats = await updateUserPaymentStats(walletAddress, amountUSDC, cycleName, 10);
+    let stats;
+    let triesGranted = 0;
+
+    if (isDonation) {
+      // For donations: add to donationsUSDC but don't grant tries
+      stats = await updateUserPaymentStats(walletAddress, amountUSDC, cycleName, 0);
+    } else {
+      // For regular payments: grant 10 tries
+      stats = await updateUserPaymentStats(walletAddress, amountUSDC, cycleName, 10);
+      triesGranted = 10;
+    }
 
     // Also store individual payment record for audit
     await db.collection("payments").add({
@@ -407,10 +416,11 @@ exports.recordPayment = functions.https.onRequest(async (req, res) => {
       cycleName: cycleName,
       transactionHash: transactionHash || null,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      triesGranted: 10,
+      triesGranted: triesGranted,
+      isDonation: isDonation || false,
     });
 
-    console.log(`Payment recorded: ${walletAddress} - ${amountUSDC} USDC`);
+    console.log(`Payment recorded: ${walletAddress} - ${amountUSDC} USDC (Donation: ${isDonation})`);
 
     res.status(200).json({
       success: true,
