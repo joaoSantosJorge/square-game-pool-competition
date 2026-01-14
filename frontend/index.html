@@ -529,7 +529,7 @@
                     const data = await response.json();
                     
                     if (data.success) {
-                        document.getElementById('total-cycles').textContent = data.totalArchives-2 > 0 ? data.totalArchives-2 : 0;
+                        document.getElementById('total-cycles').textContent = data.totalArchives > 0 ? data.totalArchives : 0;
                     } else {
                         document.getElementById('total-cycles').textContent = '0';
                     }

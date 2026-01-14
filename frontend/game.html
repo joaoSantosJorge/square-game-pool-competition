@@ -335,6 +335,16 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        
+        /* Web3Modal custom styling */
+        w3m-modal {
+            --w3m-accent-color: var(--button-bg);
+            --w3m-background-color: var(--bg);
+            --w3m-foreground-color: var(--fg);
+            --w3m-text-color: var(--fg);
+            --w3m-border-color: var(--border);
+            --w3m-font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+        }
     </style>
 </head>
 <body>
@@ -411,7 +421,7 @@
                             style="flex: 1; padding: 10px; border: 2px solid var(--border); background: var(--bg); color: var(--fg); font-family: 'Courier New', Courier, 'Lucida Console', monospace; font-size: 14px;"
                         >
                     </div>
-                    <button id="donate-btn" style="width: 100%; margin: 0; padding: 12px 20px; font-size: 16px;">💝 Donate to Prize Pool</button>
+                    <button id="donate-btn" style="width: 100%; margin: 0; padding: 12px 20px; font-size: 16px;">Donate to Prize Pool</button>
                 </div>
 
                 <div class="cycle-timer-big">
@@ -430,6 +440,65 @@
             </div>
         </div>
     </div>
+    
+    <!-- Wallet Selection Modal -->
+    <div id="wallet-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: var(--leaderboard-bg); border: 3px solid var(--leaderboard-border); padding: 30px; max-width: 500px; width: 90%; border-radius: 8px; box-shadow: 0 0 20px var(--shadow);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="margin: 0; font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 22px;">Connect Wallet</h2>
+                <button id="close-modal" style="background: none; border: none; font-size: 28px; cursor: pointer; color: var(--fg); padding: 0; width: auto;">×</button>
+            </div>
+            
+            <div id="wallet-options" style="display: grid; gap: 12px;">
+                <!-- MetaMask -->
+                <button id="connect-metamask" class="wallet-option" style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.2s; width: 100%;">
+                    <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M37.5 20c0 9.665-7.835 17.5-17.5 17.5S2.5 29.665 2.5 20 10.335 2.5 20 2.5 37.5 10.335 37.5 20z' fill='%23E2761B' stroke='%23E2761B' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M30.313 11.25l-6.876 5.1 1.276-3.025 5.6-2.075z' fill='%23E4761B' stroke='%23E4761B' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" width="40" height="40" alt="MetaMask">
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 16px; font-weight: bold;">MetaMask</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 12px; opacity: 0.7;">Connect to MetaMask</div>
+                    </div>
+                </button>
+                
+                <!-- Phantom -->
+                <button id="connect-phantom" class="wallet-option" style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.2s; width: 100%;">
+                    <img src="https://logo.svgcdn.com/token-branded/phantom.png" width="40" height="40" alt="Phantom">
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 16px; font-weight: bold;">Phantom</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 12px; opacity: 0.7;">Connect to Phantom</div>
+                    </div>
+                </button>
+                
+                <!-- WalletConnect (Mobile) -->
+                <button id="connect-walletconnect" class="wallet-option" style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.2s; width: 100%;">
+                    <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.438 13.438c5.625-5.5 14.75-5.5 20.375 0l.687.675a.688.688 0 010 1l-2.313 2.25a.375.375 0 01-.5 0l-.937-.938c-3.938-3.875-10.313-3.875-14.25 0l-1 1a.375.375 0 01-.5 0l-2.313-2.25a.688.688 0 010-1l.75-.737zm25.187 4.625l2.063 2a.688.688 0 010 1L28.5 27.813a.75.75 0 01-1 0l-4.938-4.813a.187.187 0 00-.25 0l-4.937 4.813a.75.75 0 01-1 0L9.187 21.062a.688.688 0 010-1l2.063-2a.75.75 0 011 0l4.938 4.813a.187.187 0 00.25 0l4.937-4.813a.75.75 0 011 0l4.938 4.813a.187.187 0 00.25 0l4.937-4.813a.75.75 0 011 0z' fill='%233B99FC'/%3E%3C/svg%3E" width="40" height="40" alt="WalletConnect">
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 16px; font-weight: bold;">WalletConnect</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 12px; opacity: 0.7;">Scan with mobile wallet</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: #e67e22; font-size: 12px; margin-top: 4px; font-weight: bold;">⚠️ In development: may not work. Try MetaMask or Phantom.</div>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- QR Code Container (hidden by default) -->
+            <div id="qr-container" style="display: none; margin-top: 20px; text-align: center;">
+                <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 14px; margin-bottom: 15px;">Scan with your mobile wallet</div>
+                <div id="qr-code" style="background: white; padding: 20px; display: inline-block; border-radius: 8px;"></div>
+                <div style="margin-top: 15px;">
+                    <button id="back-to-wallets" style="padding: 10px 20px; font-family: 'Courier New', Courier, 'Lucida Console', monospace; background: var(--button-bg); color: var(--button-fg); border: 2px solid var(--button-border); cursor: pointer; width: auto;">← Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .wallet-option:hover {
+            background: var(--button-bg) !important;
+            border-color: var(--button-border) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+    </style>
+    
     <!-- Load Firebase first -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
@@ -437,10 +506,10 @@
     <script src="js/leaderboard.js"></script>
     <script src="js/game.js"></script>
     <script src="js/payments.js"></script>
-    <!-- Then web3 and wallet providers -->
+    <!-- Web3 and WalletConnect libraries -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/index.js"></script>
+    <script src="https://unpkg.com/@walletconnect/sign-client@2.11.0/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
     
     <!-- Controls toggle functionality -->
     <script>
