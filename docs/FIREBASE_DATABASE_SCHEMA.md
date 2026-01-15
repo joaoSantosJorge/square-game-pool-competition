@@ -26,20 +26,19 @@ Stores active game scores for the current cycle. This collection is cleared and 
 | Field | Type | Description |
 |-------|------|-------------|
 | `walletAddress` | string | User's Ethereum wallet address (lowercase) |
-| `playerName` | string | User's display name (optional) |
+| `playerName` | string | User's display name (shortened wallet address format) |
 | `score` | number | Highest score achieved in current game session |
-| `timestamp` | number | When the score was submitted (milliseconds) |
-| `gameSession` | string | Unique identifier for the game session |
-| `deviceInfo` | string | Browser/device information (optional) |
+| `timestamp` | timestamp | Server timestamp when the score was submitted |
+| `ipAddress` | string | IP address of the submitter (for abuse detection) |
 
 **Example:**
 ```json
 {
   "walletAddress": "0x1234567890abcdef...",
-  "playerName": "GamerPro",
+  "playerName": "0x1234...cdef",
   "score": 1250,
   "timestamp": 1705315200000,
-  "gameSession": "session_12345"
+  "ipAddress": "203.0.113.42"
 }
 ```
 
@@ -67,7 +66,7 @@ Each completed cycle creates an archive collection with all scores from that per
 
 ### 3. `cycleMetadata`
 
-Stores metadata about completed cycles for archive and statistics.
+Stores metadata about completed cycles for archive and statistics. **This collection is only created after the first cycle ends.**
 
 **Document ID:** `scores_DD-MM-YYYY_to_DD-MM-YYYY` (matches archive collection name)
 
