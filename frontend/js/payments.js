@@ -15,13 +15,11 @@ async function updatePrizePool() {
     try {
         const poolDisplay = document.getElementById('pool-amount');
         if (!poolDisplay) {
-            console.log('Pool display element not found');
             return;
         }
 
         // Check if Web3 is loaded
         if (typeof Web3 === 'undefined') {
-            console.log('Web3 not loaded yet, retrying...');
             poolDisplay.textContent = 'Loading...';
             setTimeout(updatePrizePool, 1000); // Retry after 1 second
             return;
@@ -43,20 +41,23 @@ async function updatePrizePool() {
         const contract = new readWeb3.eth.Contract(contractABI, FLAPPY_BIRD_CONTRACT_ADDRESS);
         const totalPool = await contract.methods.totalPool().call();
         
-        console.log('Total pool from contract:', totalPool);
-        
         // Convert from 6 decimals (USDC) to readable format
         const poolUSDC = (parseInt(totalPool) / 1000000).toFixed(2);
         poolDisplay.textContent = `$${poolUSDC}`;
-        
-        console.log('Prize pool updated:', poolUSDC, 'USDC');
     } catch (error) {
         console.error('Error fetching prize pool:', error);
         const poolDisplay = document.getElementById('pool-amount');
         if (poolDisplay) {
-            poolDisplay.textContent = 'Error';
+            poolDisplay.textContent = 'Error loading pool';
         }
     }
+}
+
+// Call updatePrizePool immediately when script loads, and also on page load
+updatePrizePool(); // Call immediately
+if (document.readyState === 'loading') {
+    // Page still loading, wait for load event
+    window.addEventListener('load', updatePrizePool);
 }
 
 // Update wallet display
@@ -1057,26 +1058,37 @@ document.getElementById('donate-btn').addEventListener('click', donate);
 
 // Initialize on page load
 window.addEventListener('load', async () => {
-    initAppKit();
-    updateConnectButton();
-    await autoReconnect();
-    
-    // Try to restore WalletConnect session after a brief delay
-    setTimeout(async () => {
+    try {
+        initAppKit();
+        updateConnectButton();
+        
         try {
-            const restored = await restoreWalletConnectSession();
-            if (restored) {
-                updateWalletDisplay();
-                updateConnectButton();
-                console.log('WalletConnect session restored on page load');
-            }
+            await autoReconnect();
         } catch (error) {
-            console.log('Could not restore WalletConnect session:', error.message);
+            console.log('Auto-reconnect failed (non-blocking):', error.message);
         }
-    }, 1000);
+        
+        // Try to restore WalletConnect session after a brief delay
+        setTimeout(async () => {
+            try {
+                const restored = await restoreWalletConnectSession();
+                if (restored) {
+                    updateWalletDisplay();
+                    updateConnectButton();
+                    console.log('WalletConnect session restored on page load');
+                }
+            } catch (error) {
+                console.log('Could not restore WalletConnect session:', error.message);
+            }
+        }, 1000);
+    } catch (error) {
+        console.error('Wallet initialization error:', error);
+    }
     
+    // Update prize pool - this should always run regardless of wallet errors
     updatePrizePool();
     updateClaimButton();
+    
     // Refresh prize pool and claim button every 30 seconds
     setInterval(() => {
         updatePrizePool();
