@@ -130,6 +130,16 @@ User (client) → HTTP POST to recordPayment() → Cloud Function validates tran
 Score submitted → Cloud Function updates userProfiles collection with new stats
 ```
 
+### User Profile Bio Updates
+```
+User (client) → HTTP POST to updateUserProfile() → Cloud Function validates & sanitizes → Writes email/description to userProfiles
+```
+**Security Features:**
+- Email format validation
+- Input sanitization (HTML escaping, script removal)
+- Maximum length limits (email: 254 chars, description: 500 chars)
+- XSS and code injection prevention
+
 ### Cycle Transitions
 ```
 Scheduled Cloud Function (checkCycleScheduled) → Allocates funds → Archives scores → Creates cycleMetadata
@@ -149,6 +159,8 @@ Scheduled Cloud Function (checkCycleScheduled) → Allocates funds → Archives 
 - **Donation amounts** - Public for incentivization
 - **Game scores** - Public for leaderboards
 - **Player names** - Public for recognition
+- **Email addresses** - Optional, user-provided
+- **Profile descriptions** - Optional, user-provided
 
 ---
 
@@ -158,12 +170,14 @@ Scheduled Cloud Function (checkCycleScheduled) → Allocates funds → Archives 
 ✅ Read all public collections
 ✅ Call Cloud Functions to submit scores
 ✅ Call Cloud Functions to make payments
+✅ Call Cloud Functions to update their own profile (email/description)
 ✅ View leaderboards and archives
 ✅ View cycle status and countdown
 
 ### What Clients CANNOT Do
 ❌ Write directly to any collection
-❌ Modify scores or user profiles
+❌ Modify scores or user profiles directly
+❌ Update profile fields other than email/description
 ❌ Delete any records
 ❌ Read IP addresses
 ❌ Modify cycle state or metadata

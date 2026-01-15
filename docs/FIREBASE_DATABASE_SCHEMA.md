@@ -162,6 +162,8 @@ Stores user account information and statistics across all cycles.
 | `cyclesParticipated` | array | List of cycle names user participated in |
 | `cycleStats` | object | Map of cycle-specific statistics |
 | `lastActiveAt` | number | Last activity timestamp (milliseconds) |
+| `email` | string | User's email address (optional, sanitized, max 254 chars) |
+| `description` | string | User's profile description (optional, sanitized, max 500 chars) |
 
 **Cycle Stats Object (within `cycleStats`):**
 ```json
@@ -196,7 +198,9 @@ Stores user account information and statistics across all cycles.
       "lastPlayedAt": 1705881600000
     }
   },
-  "lastActiveAt": 1705881600000
+  "lastActiveAt": 1705881600000,
+  "email": "player@example.com",
+  "description": "Top scorer from the crypto gaming community!"
 }
 ```
 

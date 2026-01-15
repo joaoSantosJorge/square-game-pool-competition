@@ -39,6 +39,8 @@ async function getOrCreateUserProfile(walletAddress) {
     cyclesParticipated: [],
     cycleStats: {}, // Map of cycleName -> {donationsUSDC, highestScore, tries, gamesPlayed}
     lastActiveAt: Date.now(),
+    email: "",
+    description: "",
   };
 
   await userRef.set(newProfile);
@@ -513,6 +515,8 @@ exports.getUserProfile = functions.https.onRequest(async (req, res) => {
         walletAddress: userData.walletAddress,
         createdAt: userData.createdAt,
         lastActiveAt: userData.lastActiveAt,
+        email: userData.email || "",
+        description: userData.description || "",
         summary: {
           totalDonationsUSDC: userData.totalDonationsUSDC || 0,
           totalTries: userData.totalTries || 0,
@@ -600,6 +604,129 @@ exports.getUserRank = functions.https.onRequest(async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching user rank:", error);
+    res.status(500).json({error: "Internal server error"});
+  }
+});
+
+// Sanitize string to prevent XSS and code injection
+function sanitizeString(str, maxLength = 500) {
+  if (typeof str !== "string") return "";
+
+  // Trim and limit length
+  let sanitized = str.trim().substring(0, maxLength);
+
+  // Remove HTML tags
+  sanitized = sanitized.replace(/<[^>]*>/g, "");
+
+  // Escape special HTML characters
+  sanitized = sanitized
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  // Remove potential script injections
+  sanitized = sanitized.replace(/javascript:/gi, "")
+      .replace(/on\w+=/gi, "")
+      .replace(/data:/gi, "");
+
+  return sanitized;
+}
+
+// Validate email format
+function isValidEmail(email) {
+  if (!email || email === "") return true; // Empty is valid (optional field)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 254;
+}
+
+// Update user profile (email and description only)
+exports.updateUserProfile = functions.https.onRequest(async (req, res) => {
+  // Enable CORS
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+
+  if (req.method !== "POST") {
+    res.status(405).json({error: "Method not allowed"});
+    return;
+  }
+
+  try {
+    const {walletAddress, email, description} = req.body;
+
+    // Validation
+    if (!walletAddress || typeof walletAddress !== "string") {
+      res.status(400).json({error: "Invalid wallet address"});
+      return;
+    }
+
+    // Validate wallet format
+    if (!/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
+      res.status(400).json({error: "Invalid wallet address format"});
+      return;
+    }
+
+    // Validate email if provided
+    if (email !== undefined && email !== "" && !isValidEmail(email)) {
+      res.status(400).json({error: "Invalid email format"});
+      return;
+    }
+
+    // Sanitize inputs
+    const sanitizedEmail = email ? sanitizeString(email, 254) : "";
+    const sanitizedDescription = description ?
+      sanitizeString(description, 500) : "";
+
+    // Additional email validation after sanitization
+    if (sanitizedEmail && !isValidEmail(sanitizedEmail)) {
+      res.status(400).json({error: "Invalid email after sanitization"});
+      return;
+    }
+
+    const normalizedAddress = walletAddress.toLowerCase();
+    const userRef = db.collection("userProfiles").doc(normalizedAddress);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      // Create profile if it doesn't exist
+      await userRef.set({
+        walletAddress: normalizedAddress,
+        createdAt: Date.now(),
+        totalDonationsUSDC: 0,
+        totalTries: 0,
+        totalGamesPlayed: 0,
+        cyclesParticipated: [],
+        cycleStats: {},
+        lastActiveAt: Date.now(),
+        email: sanitizedEmail,
+        description: sanitizedDescription,
+      });
+    } else {
+      // Update existing profile
+      await userRef.update({
+        email: sanitizedEmail,
+        description: sanitizedDescription,
+        lastActiveAt: Date.now(),
+      });
+    }
+
+    console.log(`Profile updated: ${normalizedAddress}`);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      email: sanitizedEmail,
+      description: sanitizedDescription,
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
     res.status(500).json({error: "Internal server error"});
   }
 });

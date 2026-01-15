@@ -230,6 +230,134 @@
             margin-top: 0;
             font-family: 'Courier New', Courier, 'Lucida Console', monospace;
         }
+        /* Profile Bio Section */
+        .profile-bio-section {
+            background: var(--leaderboard-bg);
+            border: 2px solid var(--leaderboard-border);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 8px var(--shadow);
+        }
+        .bio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .bio-title {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        .edit-btn {
+            background: var(--button-bg);
+            color: var(--button-fg);
+            border: 2px solid var(--button-border);
+            padding: 8px 16px;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2);
+            transition: all 0.2s;
+        }
+        .edit-btn:hover {
+            background: var(--button-fg);
+            color: var(--button-bg);
+        }
+        .edit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .bio-field {
+            margin-bottom: 10px;
+        }
+        .bio-field:last-child {
+            margin-bottom: 0;
+        }
+        .bio-label {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: var(--fg);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+        .bio-value {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            color: #888888;
+            font-size: 13px;
+            padding: 6px 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            min-height: 24px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .bio-input {
+            width: 100%;
+            padding: 6px 10px;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 13px;
+            background: var(--bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+        .bio-input:focus {
+            outline: none;
+            border-color: var(--pool-border);
+        }
+        .bio-textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .bio-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .save-btn {
+            background: #4CAF50;
+            color: white;
+            border: 2px solid #388E3C;
+        }
+        .save-btn:hover {
+            background: #388E3C;
+        }
+        .cancel-btn {
+            background: #ff6b6b;
+            color: white;
+            border: 2px solid #ff5252;
+        }
+        .cancel-btn:hover {
+            background: #ff5252;
+        }
+        .bio-message {
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            font-size: 12px;
+            padding: 8px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .bio-message.success {
+            background: #4CAF50;
+            color: white;
+        }
+        .bio-message.error {
+            background: #ff6b6b;
+            color: white;
+        }
+        .bio-empty {
+            opacity: 0.5;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -265,6 +393,42 @@
             <div class="wallet-header">
                 <div class="wallet-address" id="profile-wallet">Loading...</div>
                 <div class="wallet-status" id="wallet-status">✅ Wallet Verified</div>
+                <button class="connect-wallet-btn" style="margin-top: 10px;" onclick="connectWallet()">🔗 Connect Wallet</button>
+            </div>
+
+            <!-- Profile Bio Section -->
+            <div class="profile-bio-section">
+                <div class="bio-header">
+                    <h3 class="bio-title">📝 About</h3>
+                    <button class="edit-btn" id="edit-bio-btn" style="display: none;" onclick="toggleEditMode()">Edit</button>
+                </div>
+                <!-- Display Mode -->
+                <div id="bio-display">
+                    <div class="bio-field">
+                        <div class="bio-label">Email</div>
+                        <div class="bio-value" id="display-email"><span class="bio-empty">Not provided</span></div>
+                    </div>
+                    <div class="bio-field">
+                        <div class="bio-label">Description</div>
+                        <div class="bio-value" id="display-description"><span class="bio-empty">No description</span></div>
+                    </div>
+                </div>
+                <!-- Edit Mode -->
+                <div id="bio-edit" style="display: none;">
+                    <div class="bio-field">
+                        <div class="bio-label">Email</div>
+                        <input type="email" class="bio-input" id="edit-email" placeholder="your@email.com" maxlength="254">
+                    </div>
+                    <div class="bio-field">
+                        <div class="bio-label">Description (max 500 chars)</div>
+                        <textarea class="bio-input bio-textarea" id="edit-description" placeholder="Tell us about yourself..." maxlength="500"></textarea>
+                    </div>
+                    <div class="bio-actions">
+                        <button class="edit-btn save-btn" onclick="saveProfile()">Save</button>
+                        <button class="edit-btn cancel-btn" onclick="cancelEdit()">Cancel</button>
+                    </div>
+                </div>
+                <div class="bio-message" id="bio-message" style="display: none;"></div>
             </div>
 
             <div class="stats-grid">
@@ -413,8 +577,46 @@
 
         // Connect wallet function
         async function connectWallet() {
-            // Simple MetaMask connection for now
-            await initMetaMask();
+            let provider = null;
+            
+            // Try to find an available provider (MetaMask, Phantom, or other)
+            if (window.phantom?.ethereum) {
+                // Phantom wallet
+                provider = window.phantom.ethereum;
+                console.log('Using Phantom provider');
+            } else if (window.ethereum?.isPhantom) {
+                // Phantom as default ethereum provider
+                provider = window.ethereum;
+                console.log('Using Phantom (ethereum) provider');
+            } else if (window.ethereum) {
+                // MetaMask or other injected wallet
+                provider = window.ethereum;
+                console.log('Using ethereum provider');
+            }
+            
+            if (!provider) {
+                alert('No wallet detected. Please install MetaMask or Phantom.');
+                return;
+            }
+            
+            try {
+                // Request account access
+                await provider.request({ method: 'eth_requestAccounts' });
+                const accounts = await provider.request({ method: 'eth_accounts' });
+                
+                if (accounts && accounts.length > 0) {
+                    userAccount = accounts[0];
+                    web3 = new Web3(provider);
+                    console.log('Connected wallet:', userAccount);
+                    // Reload profile to update UI
+                    loadProfile();
+                } else {
+                    console.log('No accounts returned');
+                }
+            } catch (error) {
+                console.error('Error connecting wallet:', error);
+                alert('Failed to connect wallet: ' + error.message);
+            }
         }
 
         // Check if connected wallet matches URL wallet
@@ -424,18 +626,8 @@
                 return;
             }
 
-            if (!userAccount) {
-                showWalletConnection();
-                return;
-            }
-
-            // Compare wallet addresses (case insensitive)
-            if (userAccount.toLowerCase() !== targetWallet.toLowerCase()) {
-                showUnauthorizedAccess();
-                return;
-            }
-
-            // Authorized - load profile
+            // Load profile regardless of connected wallet
+            // We'll handle permissions (editing, claiming) separately
             loadProfile();
         }
 
@@ -482,6 +674,17 @@
                 // Update wallet display
                 document.getElementById('profile-wallet').textContent = targetWallet;
 
+                // Check if viewing own profile or someone else's
+                const isOwnProfile = userAccount && userAccount.toLowerCase() === targetWallet.toLowerCase();
+                
+                // Update UI based on profile ownership
+                const walletStatus = document.getElementById('wallet-status');
+                if (isOwnProfile) {
+                    walletStatus.textContent = '✅ Your Profile';
+                } else {
+                    walletStatus.textContent = '👁️ Viewing Profile';
+                }
+
                 // Load user profile
                 const profileResponse = await fetch(
                     `https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net/getUserProfile?wallet=${targetWallet}`
@@ -523,6 +726,24 @@
         // Update profile display
         function updateProfileDisplay(profile, rankData) {
             const summary = profile.summary;
+
+            // Update bio section
+            updateBioDisplay(profile.email, profile.description);
+            
+            // Check if viewing own profile
+            const isOwnProfile = userAccount && userAccount.toLowerCase() === targetWallet.toLowerCase();
+            
+            // Show edit button only when connected to own profile
+            const editBtn = document.getElementById('edit-bio-btn');
+            const walletStatus = document.getElementById('wallet-status');
+            
+            if (isOwnProfile) {
+                editBtn.style.display = 'block';
+                walletStatus.textContent = '✅ Your Profile';
+            } else {
+                editBtn.style.display = 'none';
+                walletStatus.textContent = '👁️ Viewing Profile';
+            }
 
             // Update summary stats
             document.getElementById('current-rank').textContent = 
@@ -616,6 +837,177 @@
             }
         }
 
+        // Store current profile data for edit mode
+        let currentProfileData = { email: '', description: '' };
+        let isEditMode = false;
+
+        // Sanitize string to prevent XSS (client-side)
+        function sanitizeInput(str) {
+            if (!str) return '';
+            return str
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .replace(/data:/gi, '');
+        }
+
+        // Display sanitized text (unescape for display)
+        function displayText(str) {
+            if (!str) return '';
+            return str
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#039;/g, "'")
+                .replace(/&amp;/g, '&');
+        }
+
+        // Mask email for display (e.g., "user@gmail.com" -> "****@gmail.com")
+        function maskEmail(email) {
+            if (!email || !email.includes('@')) return email;
+            const atIndex = email.indexOf('@');
+            const domain = email.substring(atIndex);
+            return '****' + domain;
+        }
+
+        // Update bio display
+        function updateBioDisplay(email, description) {
+            const displayEmail = document.getElementById('display-email');
+            const displayDescription = document.getElementById('display-description');
+            
+            if (email && email.trim()) {
+                displayEmail.innerHTML = maskEmail(displayText(email));
+            } else {
+                displayEmail.innerHTML = '<span class="bio-empty">Not provided</span>';
+            }
+            
+            if (description && description.trim()) {
+                displayDescription.innerHTML = displayText(description);
+            } else {
+                displayDescription.innerHTML = '<span class="bio-empty">No description</span>';
+            }
+            
+            // Store current data
+            currentProfileData.email = email || '';
+            currentProfileData.description = description || '';
+        }
+
+        // Toggle edit mode
+        function toggleEditMode() {
+            isEditMode = true;
+            document.getElementById('bio-display').style.display = 'none';
+            document.getElementById('bio-edit').style.display = 'block';
+            document.getElementById('edit-bio-btn').style.display = 'none';
+            document.getElementById('bio-message').style.display = 'none';
+            
+            // Populate edit fields with current data (unescape for editing)
+            document.getElementById('edit-email').value = displayText(currentProfileData.email);
+            document.getElementById('edit-description').value = displayText(currentProfileData.description);
+        }
+
+        // Cancel edit mode
+        function cancelEdit() {
+            isEditMode = false;
+            document.getElementById('bio-display').style.display = 'block';
+            document.getElementById('bio-edit').style.display = 'none';
+            document.getElementById('edit-bio-btn').style.display = 'block';
+            document.getElementById('bio-message').style.display = 'none';
+        }
+
+        // Show bio message
+        function showBioMessage(message, isError = false) {
+            const msgElement = document.getElementById('bio-message');
+            msgElement.textContent = message;
+            msgElement.className = 'bio-message ' + (isError ? 'error' : 'success');
+            msgElement.style.display = 'block';
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                msgElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            if (!email || email.trim() === '') return true; // Empty is valid (optional)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email) && email.length <= 254;
+        }
+
+        // Save profile
+        async function saveProfile() {
+            const email = document.getElementById('edit-email').value.trim();
+            const description = document.getElementById('edit-description').value.trim();
+            
+            // Client-side validation
+            if (!isValidEmail(email)) {
+                showBioMessage('Invalid email format', true);
+                return;
+            }
+            
+            if (description.length > 500) {
+                showBioMessage('Description too long (max 500 characters)', true);
+                return;
+            }
+            
+            // Disable buttons during save
+            const saveBtn = document.querySelector('.save-btn');
+            const cancelBtn = document.querySelector('.cancel-btn');
+            saveBtn.disabled = true;
+            cancelBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            try {
+                const response = await fetch(
+                    'https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net/updateUserProfile',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            walletAddress: userAccount,
+                            email: email,
+                            description: description,
+                        }),
+                    }
+                );
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Update display with sanitized data from server
+                    updateBioDisplay(data.email, data.description);
+                    cancelEdit(); // Exit edit mode
+                    showBioMessage('Profile saved successfully!');
+                } else {
+                    showBioMessage(data.error || 'Failed to save profile', true);
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showBioMessage('Network error. Please try again.', true);
+            } finally {
+                saveBtn.disabled = false;
+                cancelBtn.disabled = false;
+                saveBtn.textContent = 'Save';
+            }
+        }
+
+        // Get the best available wallet provider
+        function getWalletProvider() {
+            if (window.phantom?.ethereum) {
+                return window.phantom.ethereum;
+            } else if (window.ethereum?.isPhantom) {
+                return window.ethereum;
+            } else if (window.ethereum) {
+                return window.ethereum;
+            }
+            return null;
+        }
+
         // Initialize
         window.addEventListener('load', () => {
             targetWallet = getWalletFromURL();
@@ -625,20 +1017,42 @@
                 return;
             }
 
+            const provider = getWalletProvider();
+            
             // Try to auto-connect wallet if available
-            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
-                userAccount = window.ethereum.selectedAddress;
-                checkWalletAccess();
-            } else {
-                showWalletConnection();
-            }
-
-            // Listen for wallet changes
-            if (typeof window.ethereum !== 'undefined') {
-                window.ethereum.on('accountsChanged', (accounts) => {
-                    userAccount = accounts[0];
-                    checkWalletAccess();
+            if (provider) {
+                // Try to get already connected account
+                provider.request({ method: 'eth_accounts' })
+                    .then((accounts) => {
+                        if (accounts && accounts.length > 0) {
+                            userAccount = accounts[0];
+                            web3 = new Web3(provider);
+                            console.log('Auto-detected wallet:', userAccount);
+                            checkWalletAccess();
+                        } else {
+                            // No accounts connected, just load profile in view mode
+                            checkWalletAccess();
+                        }
+                    })
+                    .catch(() => {
+                        checkWalletAccess();
+                    });
+                
+                // Listen for wallet changes
+                provider.on('accountsChanged', (accounts) => {
+                    if (accounts && accounts.length > 0) {
+                        userAccount = accounts[0];
+                        console.log('Wallet changed to:', userAccount);
+                        // Reload the profile to update the UI (show Edit button if now viewing own profile)
+                        loadProfile();
+                    } else {
+                        userAccount = null;
+                        loadProfile();
+                    }
                 });
+            } else {
+                // No wallet provider, just show profile in view mode
+                checkWalletAccess();
             }
         });
     </script>
