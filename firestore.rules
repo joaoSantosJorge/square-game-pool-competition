@@ -1,17 +1,10 @@
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper function to check if request comes from Cloud Functions
-    function isCloudFunction() {
-      return request.auth.uid != null && 
-             request.auth.token.iss == 'https://securetoken.google.com/flappy-bird-leaderboard-463e0';
-    }
-    
-    // Scores collection - anyone can read (except ipAddress), ONLY Cloud Functions can write
+    // Scores collection - anyone can read, ONLY Cloud Functions can write
     match /scores/{scoreId} {
-      // Allow read of all fields except ipAddress
-      allow read: if request.query.limit <= 100 && 
-                     !("ipAddress" in request.query.select);
+      // Allow read of all documents (frontend will not display ipAddress)
+      allow read: if true;
       
       // DENY all direct writes from clients - must go through Cloud Function
       allow create, update, delete: if false;
@@ -41,9 +34,9 @@ service cloud.firestore {
       allow write: if false; // Only backend/Cloud Functions can modify
     }
     
-    // Archived score collections - anyone can read, only Cloud Functions can write
-    match /scores_{date1}_to_{date2}/{scoreId} {
-      allow read: if true;
+    // Archived score collections with wildcard pattern - anyone can read
+    match /{archiveCollection}/{scoreId} {
+      allow read: if archiveCollection.matches('scores_.*_to_.*');
       allow write: if false; // Only backend/Cloud Functions can modify
     }
     
