@@ -1,14 +1,15 @@
 // Payment Integration using 402 Protocol and MetaMask
 // This file will handle micropayments for game access
+// Note: Requires config.js to be loaded first
 
 let web3;
 let userAccount;
 let hasPaid = false; // Track if user has paid to play
 let triesRemaining = 0; // Track remaining tries (10 tries per payment)
 
-// Contract addresses
-const FLAPPY_BIRD_CONTRACT_ADDRESS = '0xdd0bbf48f85f5314c3754cd63103be927b55986c';
-const BASE_SEPOLIA_RPC = 'https://sepolia.base.org';
+// Contract addresses (from centralized config)
+const FLAPPY_BIRD_CONTRACT_ADDRESS = CONFIG.CONTRACT_ADDRESS;
+const BASE_SEPOLIA_RPC = CONFIG.RPC_URL;
 
 // Update prize pool display
 async function updatePrizePool() {
@@ -818,10 +819,10 @@ async function payToPlay() {
         }
     }
 
-    // Base Sepolia testnet addresses
-    const usdcAddress = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // USDC contract on Base Sepolia
-    const flappyBirdContractAddress = '0xdd0bbf48f85f5314c3754cd63103be927b55986c'; // FlappyBirdPrizePool on Base Sepolia
-    const amount = 20000; // 0.02 USDC (6 decimals)
+    // Base Sepolia testnet addresses (from centralized config)
+    const usdcAddress = CONFIG.USDC_ADDRESS;
+    const flappyBirdContractAddress = CONFIG.CONTRACT_ADDRESS;
+    const amount = CONFIG.PLAY_COST;
 
     const usdcAbi = [
         {
@@ -952,8 +953,8 @@ async function donate() {
         }
     }
 
-    const usdcAddress = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
-    const flappyBirdContractAddress = '0xdd0bbf48f85f5314c3754cd63103be927b55986c';
+    const usdcAddress = CONFIG.USDC_ADDRESS;
+    const flappyBirdContractAddress = CONFIG.CONTRACT_ADDRESS;
 
     const usdcAbi = [
         {

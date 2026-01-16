@@ -356,6 +356,8 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/index.js"></script>
+    <!-- Centralized config -->
+    <script src="js/config.js"></script>
     
     <script>
         // Global variables
@@ -363,9 +365,9 @@
         let userAccount;
         let targetWallet; // Wallet from URL
         
-        // Contract constants
-        const FLAPPY_BIRD_CONTRACT_ADDRESS = '0xdd0bbf48f85f5314c3754cd63103be927b55986c';
-        const BASE_SEPOLIA_CHAIN_ID = 84532;
+        // Contract constants (from centralized config)
+        const FLAPPY_BIRD_CONTRACT_ADDRESS = CONFIG.CONTRACT_ADDRESS;
+        const BASE_SEPOLIA_CHAIN_ID = CONFIG.CHAIN_ID;
 
         // Theme toggle functionality
         const toggleBtn = document.getElementById('toggle-mode-btn');

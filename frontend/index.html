@@ -366,6 +366,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <!-- Load Web3 for reading contract -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <!-- Centralized config -->
+    <script src="js/config.js"></script>
 
     <script>
         // Firebase configuration
@@ -417,9 +419,9 @@
             updateLogoSquare();
         });
 
-        // Contract configuration
-        const contractAddress = '0xdd0bbf48f85f5314c3754cd63103be927b55986c'; // Base Sepolia testnet
-        const rpcUrl = 'https://sepolia.base.org';
+        // Contract configuration (from centralized config)
+        const contractAddress = CONFIG.CONTRACT_ADDRESS;
+        const rpcUrl = CONFIG.RPC_URL;
 
         // Load prize pool from smart contract
         async function loadPrizePool() {

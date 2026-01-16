@@ -16,6 +16,12 @@ service cloud.firestore {
       allow write: if false; // Only backend/Cloud Functions can modify
     }
     
+    // Config collection - anyone can read, only Cloud Functions can write
+    match /config/{document} {
+      allow read: if true;
+      allow write: if false; // Only backend/Cloud Functions can modify
+    }
+    
     // Cycle Metadata - anyone can read, only Cloud Functions can write
     match /cycleMetadata/{document} {
       allow read: if true;

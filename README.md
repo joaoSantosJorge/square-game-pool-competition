@@ -134,6 +134,7 @@ See [docs/SECRET_KEY_MANAGEMENT.md](docs/SECRET_KEY_MANAGEMENT.md) for details.
 - **Address**: `0xdd0bbf48f85f5314c3754cd63103be927b55986c`
 - **Explorer**: [View on BaseScan](https://sepolia.basescan.org/address/0xdd0bbf48f85f5314c3754cd63103be927b55986c)
 - **Network**: Base Sepolia Testnet
+- **Owner**: 0x87B3Fb6381EdC7B9Ae89540B5764f2a75C36A31B
 
 ### Key Functions
 

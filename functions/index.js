@@ -14,6 +14,128 @@ exports.checkCycleScheduled = cycleManager.checkCycleScheduled;
 exports.checkCycleManual = cycleManager.checkCycleManual;
 exports.forceAllocate = cycleManager.forceAllocate;
 
+// ===== ADMIN CONFIG ENDPOINTS =====
+
+// Update cycle duration
+exports.updateCycleDuration = functions.https.onRequest(async (req, res) => {
+  // CORS
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+
+  try {
+    const {days, adminWallet} = req.body;
+
+    if (!days || days < 1 || days > 365) {
+      return res.status(400).json({error: "Invalid cycle duration (1-365 days)"});
+    }
+
+    await db.collection("config").doc("settings").set({
+      cycleDurationDays: parseFloat(days),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedBy: adminWallet,
+    }, {merge: true});
+
+    res.json({success: true, cycleDurationDays: days});
+  } catch (error) {
+    console.error("Error updating cycle duration:", error);
+    res.status(500).json({error: error.message});
+  }
+});
+
+// Update number of winners
+exports.updateNumberOfWinners = functions.https.onRequest(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+
+  try {
+    const {winners, adminWallet} = req.body;
+
+    if (!winners || winners < 1 || winners > 10) {
+      return res.status(400).json({error: "Invalid number of winners (1-10)"});
+    }
+
+    await db.collection("config").doc("settings").set({
+      numberOfWinners: parseInt(winners),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedBy: adminWallet,
+    }, {merge: true});
+
+    res.json({success: true, numberOfWinners: winners});
+  } catch (error) {
+    console.error("Error updating winners:", error);
+    res.status(500).json({error: error.message});
+  }
+});
+
+// Update fee percentage
+exports.updateFeePercentage = functions.https.onRequest(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+
+  try {
+    const {percentage, adminWallet} = req.body;
+
+    // percentage is in basis points (100 = 1%, 1000 = 10%)
+    if (percentage === undefined || percentage < 0 || percentage > 5000) {
+      return res.status(400).json({error: "Invalid fee percentage (0-50%)"});
+    }
+
+    await db.collection("config").doc("settings").set({
+      feePercentage: parseInt(percentage),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedBy: adminWallet,
+    }, {merge: true});
+
+    res.json({success: true, feePercentage: percentage});
+  } catch (error) {
+    console.error("Error updating fee:", error);
+    res.status(500).json({error: error.message});
+  }
+});
+
+// Get current admin config
+exports.getAdminConfig = functions.https.onRequest(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+
+  try {
+    const configDoc = await db.collection("config").doc("settings").get();
+    const cycleDoc = await db.collection("cycleState").doc("current").get();
+
+    res.json({
+      config: configDoc.exists ? configDoc.data() : {},
+      cycleState: cycleDoc.exists ? cycleDoc.data() : {},
+    });
+  } catch (error) {
+    console.error("Error getting config:", error);
+    res.status(500).json({error: error.message});
+  }
+});
+
 // ===== USER PROFILE MANAGEMENT =====
 
 /**
