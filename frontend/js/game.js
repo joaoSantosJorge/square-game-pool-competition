@@ -197,7 +197,7 @@ function showGameOverPopup() {
     
     // Generate share link
     const shareUrl = window.location.origin + '/game.html';
-    const shareText = `🎮 My highest score in Square Game is ${highestScore}! 🏆 Can you beat it? Play now:`;
+    const shareText = `Just scored ${highestScore} in Square Game! 🎮\n\nCompete for real USDC prizes 💰\nBeat my score and climb the leaderboard! 🏆\n\nThink you can do better? 👇`;
     
     // Copy link button
     copyLinkBtn.onclick = () => {
@@ -232,19 +232,29 @@ function showGameOverPopup() {
     };
     
     // Play again button
-    playAgainBtn.onclick = () => {
+    playAgainBtn.onclick = async () => {
         closeModal();
-        
+
         // Check if user can play
         if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
-            alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+            // Automatically trigger payment
+            if (typeof payToPlay === 'function') {
+                await payToPlay();
+            } else {
+                alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+            }
             return;
         }
         if (typeof hasPaid !== 'undefined' && !hasPaid) {
-            alert('Please pay 0.02 USDC to play the game!');
+            // Automatically trigger payment
+            if (typeof payToPlay === 'function') {
+                await payToPlay();
+            } else {
+                alert('Please pay 0.02 USDC to play the game!');
+            }
             return;
         }
-        
+
         resetGame();
         gameRunning = true;
         gameLoop();

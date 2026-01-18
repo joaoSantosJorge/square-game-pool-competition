@@ -417,7 +417,9 @@ exports.submitScore = functions.https.onRequest(async (req, res) => {
     }
 
     // Rate limiting: check last submission time
-    const scoreRef = db.collection("scores").doc(walletAddress);
+    // Normalize wallet address to lowercase to prevent duplicates
+    const normalizedAddress = walletAddress.toLowerCase();
+    const scoreRef = db.collection("scores").doc(normalizedAddress);
     const scoreDoc = await scoreRef.get();
 
     if (scoreDoc.exists) {
@@ -455,22 +457,22 @@ exports.submitScore = functions.https.onRequest(async (req, res) => {
 
     // Save score
     await scoreRef.set({
-      walletAddress: walletAddress,
+      walletAddress: normalizedAddress,
       score: score,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      playerName: walletAddress.startsWith("0x") ?
-        walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4) :
-        walletAddress,
+      playerName: normalizedAddress.startsWith("0x") ?
+        normalizedAddress.slice(0, 6) + "..." + normalizedAddress.slice(-4) :
+        normalizedAddress,
       ipAddress: req.ip, // Track IP for abuse detection
     });
 
     // Update user profile stats
     const cycleName = await getCurrentCycleName();
     if (cycleName) {
-      await updateUserGameStats(walletAddress, score, cycleName);
+      await updateUserGameStats(normalizedAddress, score, cycleName);
     }
 
-    console.log(`Score submitted: ${walletAddress} - ${score}`);
+    console.log(`Score submitted: ${normalizedAddress} - ${score}`);
 
     res.status(200).json({
       success: true,
