@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - Square Game Prize Pool</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- html2canvas for screenshot capture -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .profile-container {
             max-width: 1200px;
@@ -277,8 +279,9 @@
         <!-- Wallet Connection Required -->
         <div class="wallet-connection" id="wallet-connection" style="display: none;">
             <h2>🔗 Connect Your Wallet</h2>
-            <p>To view your profile, please connect your wallet first.</p>
-            <button class="connect-wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+            <p>Connect your wallet to access additional features like claiming prizes.</p>
+            <button class="connect-wallet-btn" onclick="openWalletModal()">Connect Wallet</button>
+            <button class="connect-wallet-btn" onclick="loadProfile()" style="margin-top: 10px; background: var(--button-bg); opacity: 0.8;">👁️ View Profile Without Connecting</button>
         </div>
 
         <!-- Unauthorized Access -->
@@ -287,13 +290,15 @@
             <p>You can only view your own profile. Please connect the wallet that matches this URL.</p>
             <p>URL Wallet: <span id="url-wallet"></span></p>
             <p>Connected Wallet: <span id="connected-wallet"></span></p>
+            <button class="connect-wallet-btn" onclick="openWalletModal()" style="margin-top: 15px;">🔗 Connect Different Wallet</button>
         </div>
 
         <!-- Profile Content -->
         <div id="profile-content" style="display: none;">
+            <div id="profile-capture-area">
             <div class="wallet-header">
                 <div class="wallet-address" id="profile-wallet">Loading...</div>
-                <div class="wallet-status" id="wallet-status">✅ Wallet Verified</div>
+                <div class="wallet-status" id="wallet-status">👁️ Viewing Profile</div>
                 <button class="claim-prize-btn" id="claim-prize-btn" style="display: none;" onclick="claimPrize()">Claim Prize</button>
             </div>
 
@@ -337,6 +342,17 @@
                     <div class="loading-message">Loading cycle history...</div>
                 </div>
             </div>
+            </div> <!-- End profile-capture-area -->
+
+            <div class="section-card" style="background: var(--pool-bg); border: 2px solid var(--pool-border); text-align: center; padding: 30px;">
+                <div class="section-title" style="border-bottom: none; margin-bottom: 20px; color: var(--pool-fg);">📤 Share Your Profile</div>
+                <p style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--pool-fg); margin-bottom: 20px;">Show off your stats and achievements!</p>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button id="profile-copy-link" style="padding: 12px 24px; font-family: 'Courier New', Courier, 'Lucida Console', monospace; background: var(--button-bg); color: var(--button-fg); border: 2px solid var(--button-border); cursor: pointer; font-size: 14px; box-shadow: 2px 2px 0 var(--button-shadow1), 4px 4px 0 var(--button-shadow2); transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;">📋 Copy Link</button>
+                    <button id="profile-share-twitter" style="padding: 12px 24px; font-family: 'Courier New', Courier, 'Lucida Console', monospace; background: #1DA1F2; color: white; border: 2px solid #0d8ddb; cursor: pointer; font-size: 14px; box-shadow: 2px 2px 0 #0a6da8, 4px 4px 0 #085a8c; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;">𝕏 Share</button>
+                </div>
+                <div id="profile-link-copied" style="display: none; font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: #4CAF50; font-size: 12px; margin-top: 15px;">✅ Profile link copied to clipboard!</div>
+            </div>
         </div>
 
         <!-- Loading state -->
@@ -352,15 +368,72 @@
         </div>
     </div>
 
-    <!-- Load Web3 and wallet providers first -->
+    <!-- Wallet Selection Modal -->
+    <div id="wallet-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: var(--leaderboard-bg); border: 3px solid var(--leaderboard-border); padding: 30px; max-width: 500px; width: 90%; border-radius: 8px; box-shadow: 0 0 20px var(--shadow);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="margin: 0; font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 22px;">Connect Wallet</h2>
+                <button id="close-modal" style="background: none; border: none; font-size: 28px; cursor: pointer; color: var(--fg); padding: 0; width: auto;">×</button>
+            </div>
+            
+            <div id="wallet-options" style="display: grid; gap: 12px;">
+                <!-- MetaMask -->
+                <button id="connect-metamask" class="wallet-option" style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.2s; width: 100%;">
+                    <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M37.5 20c0 9.665-7.835 17.5-17.5 17.5S2.5 29.665 2.5 20 10.335 2.5 20 2.5 37.5 10.335 37.5 20z' fill='%23E2761B' stroke='%23E2761B' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M30.313 11.25l-6.876 5.1 1.276-3.025 5.6-2.075z' fill='%23E4761B' stroke='%23E4761B' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" width="40" height="40" alt="MetaMask">
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 16px; font-weight: bold;">MetaMask</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 12px; opacity: 0.7;">Connect to MetaMask</div>
+                    </div>
+                </button>
+                
+                <!-- Phantom -->
+                <button id="connect-phantom" class="wallet-option" style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.2s; width: 100%;">
+                    <img src="https://logo.svgcdn.com/token-branded/phantom.png" width="40" height="40" alt="Phantom">
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 16px; font-weight: bold;">Phantom</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 12px; opacity: 0.7;">Connect to Phantom</div>
+                    </div>
+                </button>
+                
+                <!-- WalletConnect (Mobile) -->
+                <button id="connect-walletconnect" class="wallet-option" style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; transition: all 0.2s; width: 100%;">
+                    <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.438 13.438c5.625-5.5 14.75-5.5 20.375 0l.687.675a.688.688 0 010 1l-2.313 2.25a.375.375 0 01-.5 0l-.937-.938c-3.938-3.875-10.313-3.875-14.25 0l-1 1a.375.375 0 01-.5 0l-2.313-2.25a.688.688 0 010-1l.75-.737zm25.187 4.625l2.063 2a.688.688 0 010 1L28.5 27.813a.75.75 0 01-1 0l-4.938-4.813a.187.187 0 00-.25 0l-4.937 4.813a.75.75 0 01-1 0L9.187 21.062a.688.688 0 010-1l2.063-2a.75.75 0 011 0l4.938 4.813a.187.187 0 00.25 0l4.937-4.813a.75.75 0 011 0l4.938 4.813a.187.187 0 00.25 0l4.937-4.813a.75.75 0 011 0z' fill='%233B99FC'/%3E%3C/svg%3E" width="40" height="40" alt="WalletConnect">
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 16px; font-weight: bold;">WalletConnect</div>
+                        <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 12px; opacity: 0.7;">Scan with mobile wallet</div>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- QR Code Container (hidden by default) -->
+            <div id="qr-container" style="display: none; margin-top: 20px; text-align: center;">
+                <div style="font-family: 'Courier New', Courier, 'Lucida Console', monospace; color: var(--fg); font-size: 14px; margin-bottom: 15px;">Scan with your mobile wallet</div>
+                <div id="qr-code" style="background: white; padding: 20px; display: inline-block; border-radius: 8px;"></div>
+                <div style="margin-top: 15px;">
+                    <button id="back-to-wallets" style="padding: 10px 20px; font-family: 'Courier New', Courier, 'Lucida Console', monospace; background: var(--button-bg); color: var(--button-fg); border: 2px solid var(--button-border); cursor: pointer; width: auto;">← Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .wallet-option:hover {
+            background: var(--button-bg) !important;
+            border-color: var(--button-border) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+    </style>
+
+    <!-- Load Web3 and WalletConnect libraries -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.7.1/dist/index.js"></script>
-    <!-- Centralized config -->
+    <script src="https://unpkg.com/@walletconnect/sign-client@2.11.0/dist/index.umd.js"></script>
+    <!-- Centralized config and shared wallet module -->
     <script src="js/config.js"></script>
+    <script src="js/wallet.js"></script>
     
     <script>
-        // Global variables
+        // Page-specific variables
         let web3;
         let userAccount;
         let targetWallet; // Wallet from URL
@@ -396,11 +469,9 @@
             return urlParams.get('wallet');
         }
 
-        // Truncate wallet address for display
+        // Truncate wallet address for display (use shared version if available)
         function truncateAddress(address) {
-            if (!address) return 'Unknown';
-            if (address.length < 12) return address;
-            return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+            return WalletManager.truncateAddress(address);
         }
 
         // Format date helper
@@ -429,40 +500,9 @@
             return cycleName;
         }
 
-        // Get the best available wallet provider
-        function getWalletProvider() {
-            if (window.phantom?.ethereum) {
-                return window.phantom.ethereum;
-            } else if (window.ethereum?.isPhantom) {
-                return window.ethereum;
-            } else if (window.ethereum) {
-                return window.ethereum;
-            }
-            return null;
-        }
-
-        // Initialize MetaMask connection
-        async function initMetaMask() {
-            if (typeof window.ethereum !== 'undefined') {
-                web3 = new Web3(window.ethereum);
-                try {
-                    await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const accounts = await web3.eth.getAccounts();
-                    userAccount = accounts[0];
-                    console.log('Connected account:', userAccount);
-                    checkWalletAccess();
-                } catch (error) {
-                    console.error('User denied account access');
-                }
-            } else {
-                console.error('MetaMask not detected');
-            }
-        }
-
-        // Connect wallet function
-        async function connectWallet() {
-            // Simple MetaMask connection for now
-            await initMetaMask();
+        // Open wallet modal (delegated to WalletManager)
+        function openWalletModal() {
+            WalletManager.openModal();
         }
 
         // Check if connected wallet matches URL wallet
@@ -472,19 +512,13 @@
                 return;
             }
 
-            if (!userAccount) {
-                showWalletConnection();
-                return;
-            }
-
-            // Compare wallet addresses (case insensitive)
-            if (userAccount.toLowerCase() !== targetWallet.toLowerCase()) {
-                showUnauthorizedAccess();
-                return;
-            }
-
-            // Authorized - load profile
+            // Always load the profile - anyone can view any profile
             loadProfile();
+        }
+        
+        // Check if the connected wallet is the profile owner
+        function isProfileOwner() {
+            return userAccount && userAccount.toLowerCase() === targetWallet.toLowerCase();
         }
 
         // Show wallet connection required
@@ -530,8 +564,22 @@
                 // Update wallet display
                 document.getElementById('profile-wallet').textContent = targetWallet;
                 
+                // Update wallet status based on ownership
+                const walletStatus = document.getElementById('wallet-status');
+                if (isProfileOwner()) {
+                    walletStatus.textContent = '✅ Your Profile';
+                    walletStatus.style.color = '#4CAF50';
+                } else if (userAccount) {
+                    walletStatus.textContent = '👁️ Viewing Profile';
+                    walletStatus.style.color = '#888';
+                } else {
+                    walletStatus.textContent = '👁️ Public View';
+                    walletStatus.style.color = '#888';
+                }
+                
                 console.log('Loading profile for:', targetWallet);
                 console.log('Connected account:', userAccount);
+                console.log('Is owner:', isProfileOwner());
 
                 // Load user profile
                 const profileResponse = await fetch(
@@ -557,7 +605,6 @@
                 const rankResponse = await fetch(
                     `https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net/getUserRank?wallet=${targetWallet}`
                 );
-                let rankData = null;
                 if (rankResponse.ok) {
                     rankData = await rankResponse.json();
                 }
@@ -565,8 +612,13 @@
                 // Update profile display
                 updateProfileDisplay(profileData.profile, rankData);
                 
-                // Check for claimable prizes
-                await updateClaimPrizeButton();
+                // Setup share buttons after data is loaded
+                setupProfileShareButtons();
+                
+                // Check for claimable prizes (only if owner)
+                if (isProfileOwner()) {
+                    await updateClaimPrizeButton();
+                }
 
             } catch (error) {
                 console.error('Error loading profile:', error);
@@ -687,7 +739,8 @@
             // Update summary stats
             document.getElementById('current-rank').textContent = 
                 rankData && rankData.rank ? `#${rankData.rank}/${rankData.totalPlayers}` : 'Not ranked';
-            document.getElementById('best-score').textContent = summary.allTimeBestScore || 0;
+            highestScore = summary.allTimeBestScore || 0;
+            document.getElementById('best-score').textContent = highestScore;
             document.getElementById('total-donations').textContent = `$${(summary.totalDonationsUSDC || 0).toFixed(2)}`;
             document.getElementById('prize-won').textContent = `$${(summary.totalPrizesWonUSDC || 0).toFixed(2)}`;
             document.getElementById('cycles-participated').textContent = summary.cyclesParticipated || 0;
@@ -777,7 +830,7 @@
         }
 
         // Initialize
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             targetWallet = getWalletFromURL();
             
             if (!targetWallet) {
@@ -785,47 +838,149 @@
                 return;
             }
 
-            const provider = getWalletProvider();
+            // Initialize WalletManager with page-specific callbacks
+            WalletManager.init({
+                onConnect: (account, web3Instance) => {
+                    console.log('✅ Wallet connected:', account);
+                    userAccount = account;
+                    web3 = web3Instance;
+                    checkWalletAccess();
+                },
+                onDisconnect: () => {
+                    console.log('🔌 Wallet disconnected');
+                    userAccount = null;
+                    web3 = null;
+                    checkWalletAccess();
+                },
+                onAccountChange: (newAccount) => {
+                    console.log('🔄 Account changed to:', newAccount);
+                    userAccount = newAccount;
+                    checkWalletAccess();
+                },
+                onChainChange: (chainId) => {
+                    console.log('🔗 Chain changed to:', chainId);
+                    checkWalletAccess();
+                },
+                onError: (error) => {
+                    console.error('❌ Wallet error:', error);
+                }
+            });
+
+            // Try to auto-reconnect existing wallet
+            const reconnected = await WalletManager.autoReconnect();
             
-            // Try to auto-connect wallet if available
-            if (provider) {
-                // Try to get already connected account
-                provider.request({ method: 'eth_accounts' })
-                    .then((accounts) => {
-                        if (accounts && accounts.length > 0) {
-                            userAccount = accounts[0];
-                            web3 = new Web3(provider);
-                            console.log('Auto-detected wallet:', userAccount);
-                            console.log('Web3 initialized:', web3 ? 'yes' : 'no');
-                            checkWalletAccess();
-                        } else {
-                            // No accounts connected, just load profile in view mode
-                            checkWalletAccess();
-                        }
-                    })
-                    .catch(() => {
-                        checkWalletAccess();
-                    });
-                
-                // Listen for wallet changes
-                provider.on('accountsChanged', (accounts) => {
-                    if (accounts && accounts.length > 0) {
-                        userAccount = accounts[0];
-                        web3 = new Web3(provider);
-                        console.log('Wallet changed to:', userAccount);
-                        // Reload the profile to update the UI (show Edit button if now viewing own profile)
-                        loadProfile();
-                    } else {
-                        userAccount = null;
-                        web3 = null;
-                        loadProfile();
-                    }
-                });
-            } else {
-                // No wallet provider, just show profile in view mode
-                checkWalletAccess();
+            if (reconnected) {
+                userAccount = WalletManager.getAccount();
+                web3 = WalletManager.getWeb3();
+                console.log('Auto-reconnected wallet:', userAccount);
             }
+            
+            checkWalletAccess();
+            
+            // Share buttons will be set up after profile data loads
         });
+
+        // Setup profile share functionality
+        function setupProfileShareButtons() {
+            const copyLinkBtn = document.getElementById('profile-copy-link');
+            const shareTwitterBtn = document.getElementById('profile-share-twitter');
+            const linkCopiedMsg = document.getElementById('profile-link-copied');
+            
+            if (!copyLinkBtn || !shareTwitterBtn) {
+                console.error('Share buttons not found');
+                return;
+            }
+            
+            // Copy link button
+            copyLinkBtn.onclick = () => {
+                // Generate URL dynamically at click time
+                const profileUrl = window.location.origin + '/frontend/profile.html?wallet=' + targetWallet;
+                
+                navigator.clipboard.writeText(profileUrl).then(() => {
+                    linkCopiedMsg.style.display = 'block';
+                    setTimeout(() => linkCopiedMsg.style.display = 'none', 3000);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const input = document.createElement('input');
+                    input.value = profileUrl;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                    linkCopiedMsg.style.display = 'block';
+                    setTimeout(() => linkCopiedMsg.style.display = 'none', 3000);
+                });
+            };
+            
+            // Twitter/X share button with screenshot
+            shareTwitterBtn.onclick = async () => {
+                // Show loading state
+                const originalText = shareTwitterBtn.textContent;
+                shareTwitterBtn.textContent = '📸 Capturing...';
+                shareTwitterBtn.disabled = true;
+                
+                try {
+                    // Capture the profile stats area
+                    const captureArea = document.getElementById('profile-capture-area');
+                    const canvas = await html2canvas(captureArea, {
+                        backgroundColor: '#1a1a2e',
+                        scale: 2,
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    // Convert to blob and download
+                    canvas.toBlob(async (blob) => {
+                        // Try to copy image to clipboard (modern browsers)
+                        try {
+                            await navigator.clipboard.write([
+                                new ClipboardItem({ 'image/png': blob })
+                            ]);
+                            linkCopiedMsg.textContent = '📸 Screenshot copied to clipboard! Paste it in your tweet.';
+                            linkCopiedMsg.style.display = 'block';
+                        } catch (clipErr) {
+                            // Fallback: download the image
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `square-game-profile-${targetWallet.substring(0, 8)}.png`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            linkCopiedMsg.textContent = '📸 Screenshot downloaded! Attach it to your tweet.';
+                            linkCopiedMsg.style.display = 'block';
+                        }
+                        
+                        setTimeout(() => {
+                            linkCopiedMsg.style.display = 'none';
+                            linkCopiedMsg.textContent = '✅ Profile link copied to clipboard!';
+                        }, 5000);
+                        
+                        // Open Twitter intent
+                        const profileUrl = window.location.origin + '/frontend/profile.html?wallet=' + targetWallet;
+                        const shareText = `🏆 Check out my profile on Square Game Prize Pool!\n\n🎯 Rank: #${rankData?.rank || '?'}\n⭐ Best Score: ${highestScore || '?'}\n\nJoin the competition:`;
+                        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(profileUrl)}`;
+                        window.open(twitterUrl, '_blank', 'width=550,height=420');
+                    }, 'image/png');
+                    
+                } catch (err) {
+                    console.error('Screenshot capture failed:', err);
+                    // Fallback: just open Twitter without screenshot
+                    const profileUrl = window.location.origin + '/frontend/profile.html?wallet=' + targetWallet;
+                    const shareText = `🏆 Check out my profile on Square Game Prize Pool! Rank: #${rankData?.rank || '?'} Best Score: ${highestScore || '?'}`;
+                    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(profileUrl)}`;
+                    window.open(twitterUrl, '_blank', 'width=550,height=420');
+                } finally {
+                    shareTwitterBtn.textContent = originalText;
+                    shareTwitterBtn.disabled = false;
+                }
+            };
+        }
+        
+        // Store data for share functionality
+        let rankData = null;
+        let highestScore = 0;
     </script>
 </body>
 </html>

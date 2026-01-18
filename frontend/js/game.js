@@ -167,6 +167,100 @@ function updateScore() {
     document.getElementById('score').textContent = highestScore;
 }
 
+// Show game over popup
+function showGameOverPopup() {
+    const modal = document.getElementById('game-over-modal');
+    const finalScoreDisplay = document.getElementById('final-score-display');
+    const highestScoreDisplay = document.getElementById('highest-score-display');
+    const triesDisplay = document.getElementById('tries-remaining-display');
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const copyLinkBtn = document.getElementById('copy-share-link');
+    const shareTwitterBtn = document.getElementById('share-twitter');
+    const linkCopiedMsg = document.getElementById('share-link-copied');
+    
+    // Update displays
+    finalScoreDisplay.textContent = score;
+    highestScoreDisplay.textContent = highestScore;
+    
+    // Show tries remaining
+    if (typeof triesRemaining !== 'undefined') {
+        if (triesRemaining > 0) {
+            triesDisplay.textContent = `Tries Remaining: ${triesRemaining}`;
+            triesDisplay.style.color = 'var(--fg)';
+        } else {
+            triesDisplay.textContent = '❌ No tries remaining - Pay to play more!';
+            triesDisplay.style.color = '#ff6b6b';
+        }
+    } else {
+        triesDisplay.style.display = 'none';
+    }
+    
+    // Generate share link
+    const shareUrl = window.location.origin + '/game.html';
+    const shareText = `🎮 My highest score in Square Game is ${highestScore}! 🏆 Can you beat it? Play now:`;
+    
+    // Copy link button
+    copyLinkBtn.onclick = () => {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            linkCopiedMsg.style.display = 'block';
+            setTimeout(() => linkCopiedMsg.style.display = 'none', 3000);
+        }).catch(() => {
+            // Fallback for older browsers
+            const input = document.createElement('input');
+            input.value = shareUrl;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            linkCopiedMsg.style.display = 'block';
+            setTimeout(() => linkCopiedMsg.style.display = 'none', 3000);
+        });
+    };
+    
+    // Twitter/X share button
+    shareTwitterBtn.onclick = () => {
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+        window.open(twitterUrl, '_blank', 'width=550,height=420');
+    };
+    
+    // Function to close modal
+    const closeModal = () => {
+        modal.style.display = 'none';
+        // Reset game state to allow interactions with page
+        gameOver = false;
+        gameRunning = false;
+    };
+    
+    // Play again button
+    playAgainBtn.onclick = () => {
+        closeModal();
+        
+        // Check if user can play
+        if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
+            alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+            return;
+        }
+        if (typeof hasPaid !== 'undefined' && !hasPaid) {
+            alert('Please pay 0.02 USDC to play the game!');
+            return;
+        }
+        
+        resetGame();
+        gameRunning = true;
+        gameLoop();
+    };
+    
+    // Close modal on background click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    };
+    
+    // Show modal
+    modal.style.display = 'flex';
+}
+
 // Show game over
 function showGameOver() {
     // Decrement tries
@@ -180,22 +274,18 @@ function showGameOver() {
         }
     }
     
-    // ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    // Draw game over on canvas (background)
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
     ctx.font = "36px 'Courier New', Courier, monospace";
     ctx.textAlign = 'center';
-    ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 50);
-    ctx.font = "24px 'Courier New', Courier, monospace";
-    ctx.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2);
-    
-    // Show tries remaining
-    if (typeof triesRemaining !== 'undefined') {
-        ctx.fillText('Tries Remaining: ' + triesRemaining, canvas.width / 2, canvas.height / 2 + 30);
-    }
-    
-    ctx.fillText('Click to Restart', canvas.width / 2, canvas.height / 2 + 60);
+    ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2);
     ctx.textAlign = 'left';
+    
+    // Show the popup modal only when tries remaining = 0
+    if (typeof triesRemaining !== 'undefined' && triesRemaining === 0) {
+        showGameOverPopup();
+    }
 
     // Submit score to leaderboard if connected
     if (typeof userAccount !== 'undefined' && userAccount && score > 0) {
@@ -252,6 +342,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 canvas.addEventListener('click', () => {
+    // If modal is open, don't process canvas clicks
+    const modal = document.getElementById('game-over-modal');
+    if (modal && modal.style.display === 'flex') {
+        return;
+    }
+    
     if (gameOver) {
         // Check if user has paid and has tries remaining before allowing restart
         if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
