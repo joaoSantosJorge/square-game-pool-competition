@@ -456,17 +456,18 @@
             localStorage.setItem('theme', currentTheme);
         });
 
-        // Get wallet address from URL path
+        // Get wallet address from URL path (returns lowercase for storage/comparisons)
         function getWalletFromURL() {
             const path = window.location.pathname;
             // Remove leading slash and check if it looks like a wallet address
             const address = path.substring(1);
             if (address.match(/^0x[a-fA-F0-9]{40}$/)) {
-                return address;
+                return address.toLowerCase();
             }
             // Fallback to query parameter
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('wallet');
+            const wallet = urlParams.get('wallet');
+            return wallet ? wallet.toLowerCase() : null;
         }
 
         // Truncate wallet address for display (use shared version if available)
@@ -516,9 +517,9 @@
             loadProfile();
         }
         
-        // Check if the connected wallet is the profile owner
+        // Check if the connected wallet is the profile owner (both are already lowercase)
         function isProfileOwner() {
-            return userAccount && userAccount.toLowerCase() === targetWallet.toLowerCase();
+            return userAccount && userAccount === targetWallet;
         }
 
         // Show wallet connection required
@@ -631,8 +632,8 @@
             const claimBtn = document.getElementById('claim-prize-btn');
             if (!claimBtn) return;
             
-            // Only show claim button if viewing own profile
-            if (!userAccount || userAccount.toLowerCase() !== targetWallet.toLowerCase()) {
+            // Only show claim button if viewing own profile (both are already lowercase)
+            if (!userAccount || userAccount !== targetWallet) {
                 claimBtn.style.display = 'none';
                 return;
             }

@@ -519,10 +519,11 @@
             localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
         });
 
-        // Check URL parameter
+        // Check URL parameter (returns lowercase for storage/comparisons)
         function getWalletFromURL() {
             const params = new URLSearchParams(window.location.search);
-            return params.get('wallet');
+            const wallet = params.get('wallet');
+            return wallet ? wallet.toLowerCase() : null;
         }
 
         // Connect wallet and verify ownership
@@ -537,7 +538,7 @@
 
                 // Request account access
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAccount = accounts[0];
+                userAccount = accounts[0].toLowerCase();
 
                 // Initialize Web3
                 web3 = new Web3(window.ethereum);
@@ -555,14 +556,14 @@
                 console.log('Connected wallet:', userAccount);
                 console.log('Contract owner:', contractOwner);
 
-                // Verify ownership
-                if (userAccount.toLowerCase() !== contractOwner.toLowerCase()) {
+                // Verify ownership (userAccount is already lowercase)
+                if (userAccount !== contractOwner.toLowerCase()) {
                     throw new Error(`Access denied. Only the contract owner (${contractOwner.slice(0,6)}...${contractOwner.slice(-4)}) can access this dashboard.`);
                 }
 
-                // Check URL wallet param
+                // Check URL wallet param (both are already lowercase)
                 const urlWallet = getWalletFromURL();
-                if (urlWallet && urlWallet.toLowerCase() !== userAccount.toLowerCase()) {
+                if (urlWallet && urlWallet !== userAccount) {
                     throw new Error('Connected wallet does not match URL parameter.');
                 }
 

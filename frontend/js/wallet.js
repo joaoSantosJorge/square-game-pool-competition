@@ -181,17 +181,17 @@ const WalletManager = (function() {
         
         const newAccount = accounts[0];
         
-        if (userAccount && newAccount.toLowerCase() !== userAccount.toLowerCase()) {
+        if (userAccount && newAccount.toLowerCase() !== userAccount) {
             console.log('Account switched from', truncateAddress(userAccount), 'to', truncateAddress(newAccount));
-            userAccount = newAccount;
+            userAccount = newAccount.toLowerCase();
             
             if (callbacks.onAccountChange) {
                 callbacks.onAccountChange(newAccount);
             }
         } else if (!userAccount) {
-            userAccount = newAccount;
+            userAccount = newAccount.toLowerCase();
             if (callbacks.onConnect) {
-                callbacks.onConnect(newAccount, web3);
+                callbacks.onConnect(userAccount, web3);
             }
         }
     }
@@ -280,7 +280,7 @@ const WalletManager = (function() {
             throw new Error('No accounts found');
         }
         
-        userAccount = accounts[0];
+        userAccount = accounts[0].toLowerCase();
         console.log('✅ Connected to account:', userAccount);
         
         setupProviderListeners();
@@ -577,8 +577,8 @@ const WalletManager = (function() {
             wcProvider = createWalletConnectProvider(signClient, session);
             provider = wcProvider;
             web3 = new Web3(provider);
-            userAccount = address;
-            
+            userAccount = address.toLowerCase();
+
             console.log('✅ Connected via WalletConnect');
             
             closeModal();
@@ -653,8 +653,8 @@ const WalletManager = (function() {
             wcProvider = createWalletConnectProvider(signClient, session);
             provider = wcProvider;
             web3 = new Web3(provider);
-            userAccount = address;
-            
+            userAccount = address.toLowerCase();
+
             console.log('✅ Restored WalletConnect session for:', userAccount);
             
             if (callbacks.onConnect) {
@@ -712,7 +712,7 @@ const WalletManager = (function() {
                 console.log('Checking for connected accounts...', accounts);
                 
                 if (accounts && accounts.length > 0) {
-                    userAccount = accounts[0];
+                    userAccount = accounts[0].toLowerCase();
                     web3 = new Web3(detectedProvider);
                     console.log('Auto-detected wallet:', userAccount);
                     
