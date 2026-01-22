@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Deploy FlappyBirdPrizePool to Base Sepolia Testnet
+# Deploy SquarePrizePool to Base Sepolia Testnet
 # This script uses Foundry's forge to deploy the contract
 
 set -e  # Exit on error
 
 echo "======================================"
-echo "FlappyBird Contract Deployment Script"
+echo "SquarePrizePool Contract Deployment"
 echo "Target: Base Sepolia Testnet"
 echo "======================================"
 echo ""
@@ -59,7 +59,7 @@ echo "Deploying contract..."
 echo ""
 
 # Run the deployment script
-forge script script/Deploy.s.sol:DeployScript \
+forge script script/DeploySquare.s.sol:DeploySquareScript \
     --rpc-url $RPC_URL \
     --broadcast \
     --verify \
@@ -72,8 +72,8 @@ echo "======================================"
 echo ""
 echo "Next steps:"
 echo "1. Copy the deployed contract address from above"
-echo "2. Update js/payments.js with the new address"
-echo "3. Update cycleManager.js with the new address"
+echo "2. Update frontend/js/config.js with the new address"
+echo "3. Update functions/.env with the new address"
 echo "4. Get testnet USDC from faucet if needed"
 echo "5. Test the payment flow on testnet"
 echo ""
