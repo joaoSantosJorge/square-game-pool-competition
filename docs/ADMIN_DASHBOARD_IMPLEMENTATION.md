@@ -633,7 +633,7 @@ Create this file at `/home/joaosantosjorge/flappybird-pool-competition/frontend/
     
     <script>
         // Configuration
-        const CONTRACT_ADDRESS = '0xdd0bbf48f85f5314c3754cd63103be927b55986c';
+        const CONTRACT_ADDRESS = '0x5b498d19A03E24b5187d5B71B80b02C437F9cE08';
         const BASE_SEPOLIA_RPC = 'https://sepolia.base.org';
         const FIREBASE_FUNCTIONS_URL = 'https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net';
         

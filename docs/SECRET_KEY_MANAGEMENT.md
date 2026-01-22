@@ -108,7 +108,7 @@ Set these environment variables in Render (not as secret files):
 KEYSTORE_PATH=/etc/secrets/keystore
 KEYSTORE_PASSWORD=your_actual_password
 GOOGLE_APPLICATION_CREDENTIALS=/etc/secrets/serviceAccountKey.json
-FLAPPY_BIRD_CONTRACT_ADDRESS=0xdd0bbf48f85f5314c3754cd63103be927b55986c
+CONTRACT_ADDRESS=0x5b498d19A03E24b5187d5B71B80b02C437F9cE08
 NODE_ENV=production
 ```
 

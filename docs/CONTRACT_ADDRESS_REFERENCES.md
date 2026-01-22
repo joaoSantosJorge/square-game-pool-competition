@@ -1,8 +1,8 @@
 # Contract Address References
 
-This document lists all locations where the FlappyBirdPrizePool contract address is referenced in the codebase.
+This document lists all locations where the SquarePrizePool contract address is referenced in the codebase.
 
-**Current Contract Address:** `0xdd0bbf48f85f5314c3754cd63103be927b55986c`
+**Current Contract Address:** `0x5b498d19A03E24b5187d5B71B80b02C437F9cE08`
 
 ---
 
@@ -14,7 +14,7 @@ All frontend files now use a single config file. **To change the contract addres
 
 ```javascript
 const CONFIG = {
-    CONTRACT_ADDRESS: '0xdd0bbf48f85f5314c3754cd63103be927b55986c',  // ← Change this
+    CONTRACT_ADDRESS: '0x5b498d19A03E24b5187d5B71B80b02C437F9cE08',  // ← Change this
     USDC_ADDRESS: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
     CHAIN_ID: 84532,
     RPC_URL: 'https://sepolia.base.org',
