@@ -269,10 +269,10 @@
             <h1>👤 USER PROFILE</h1>
             <div class="nav-links">
                 <button id="toggle-mode-btn" style="margin: 0;">Toggle Light/Dark</button>
-                <a href="index.html">Home</a>
-                <a href="game.html">Play Game</a>
-                <a href="rules.html">Rules</a>
-                <a href="archive.html">Archive</a>
+                <a href="/">Home</a>
+                <a href="game">Play Game</a>
+                <a href="rules">Rules</a>
+                <a href="archive">Archive</a>
             </div>
         </div>
 
@@ -896,7 +896,7 @@
             // Copy link button
             copyLinkBtn.onclick = () => {
                 // Generate URL dynamically at click time
-                const profileUrl = window.location.origin + '/frontend/profile.html?wallet=' + targetWallet;
+                const profileUrl = window.location.origin + '/frontend/profile?wallet=' + targetWallet;
                 
                 navigator.clipboard.writeText(profileUrl).then(() => {
                     linkCopiedMsg.style.display = 'block';
@@ -960,7 +960,7 @@
                         }, 5000);
                         
                         // Open Twitter intent
-                        const profileUrl = window.location.origin + '/frontend/profile.html?wallet=' + targetWallet;
+                        const profileUrl = window.location.origin + '/frontend/profile?wallet=' + targetWallet;
                         const shareText = isProfileOwner()
                             ? `🏆 Check out my profile on Square Game Prize Pool!\n\n🎯 Rank: #${rankData?.rank || '?'}\n⭐ Best Score: ${highestScore || '?'}\n\nJoin the competition:`
                             : `🏆 Check out this player on Square Game Prize Pool!\n\n🎯 Rank: #${rankData?.rank || '?'}\n⭐ Best Score: ${highestScore || '?'}\n\nJoin the competition:`;
@@ -971,7 +971,7 @@
                 } catch (err) {
                     console.error('Screenshot capture failed:', err);
                     // Fallback: just open Twitter without screenshot
-                    const profileUrl = window.location.origin + '/frontend/profile.html?wallet=' + targetWallet;
+                    const profileUrl = window.location.origin + '/frontend/profile?wallet=' + targetWallet;
                     const shareText = isProfileOwner()
                         ? `🏆 Check out my profile on Square Game Prize Pool! Rank: #${rankData?.rank || '?'} Best Score: ${highestScore || '?'}`
                         : `🏆 Check out this player on Square Game Prize Pool! Rank: #${rankData?.rank || '?'} Best Score: ${highestScore || '?'}`;

@@ -130,9 +130,9 @@
             <h1>📜 GAME RULES</h1>
             <div class="nav-links">
                 <button id="toggle-mode-btn" style="margin: 0;">Toggle Light/Dark</button>
-                <a href="index.html">Home</a>
-                <a href="game.html">Play Game</a>
-                <a href="archive.html">Leaderboard Archive</a>
+                <a href="/">Home</a>
+                <a href="game">Play Game</a>
+                <a href="archive">Leaderboard Archive</a>
                 <a href="#" id="profile-link">👤 Profile</a>
             </div>
         </div>
@@ -321,7 +321,7 @@
         document.getElementById('profile-link').addEventListener('click', (e) => {
             e.preventDefault();
             if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
-                window.location.href = `profile.html?wallet=${window.ethereum.selectedAddress}`;
+                window.location.href = `profile?wallet=${window.ethereum.selectedAddress}`;
             } else {
                 alert('Please connect your wallet first to view your profile.');
             }

@@ -293,6 +293,7 @@ For detailed information, see these docs in `/docs/`:
 | `FIREBASE_DATABASE_SCHEMA.md` | Full database schema with all field definitions |
 | `FIREBASE_CYCLE_MANAGER_DEPLOYMENT.md` | Cloud Functions deployment guide |
 | `SECRET_KEY_MANAGEMENT.md` | How keystore and secrets are managed |
+| `FIAT_INTEGRATION_SOLUTIONS.md` | Fiat payment research: on-ramp, off-ramp, and identity solutions for non-crypto users |
 
 ---
 

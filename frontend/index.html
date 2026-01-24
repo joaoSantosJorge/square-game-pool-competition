@@ -263,9 +263,9 @@
             </div>
 
             <div class="cta-buttons">
-                <a href="game.html" class="cta-btn cta-btn-primary">🎮 Play Now</a>
-                <a href="rules.html" class="cta-btn">📜 Rules</a>
-                <a href="archive.html" class="cta-btn">📊 Archive</a>
+                <a href="game" class="cta-btn cta-btn-primary">🎮 Play Now</a>
+                <a href="rules" class="cta-btn">📜 Rules</a>
+                <a href="archive" class="cta-btn">📊 Archive</a>
                 <a href="#" class="cta-btn" id="profile-link">👤 Profile</a>
             </div>
         </div>
@@ -351,7 +351,7 @@
         </div>
 
         <div class="cta-buttons" style="margin-top: 50px;">
-            <a href="game.html" class="cta-btn cta-btn-primary">🚀 Start Playing Now</a>
+            <a href="game" class="cta-btn cta-btn-primary">🚀 Start Playing Now</a>
         </div>
 
         <div style="margin-top: 60px; padding: 20px; border-top: 2px dashed var(--border);">
@@ -560,7 +560,7 @@
         document.getElementById('profile-link').addEventListener('click', (e) => {
             e.preventDefault();
             if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
-                window.location.href = `profile.html?wallet=${window.ethereum.selectedAddress}`;
+                window.location.href = `profile?wallet=${window.ethereum.selectedAddress}`;
             } else {
                 alert('Please connect your wallet first to view your profile.');
             }
