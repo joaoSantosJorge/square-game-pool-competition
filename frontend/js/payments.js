@@ -460,7 +460,10 @@ async function payToPlay() {
             // Update prize pool display after payment
             await updatePrizePool();
             
-            if (payBtn) payBtn.textContent = originalText;
+            if (payBtn) {
+                payBtn.textContent = originalText;
+                payBtn.disabled = false;
+            }
             alert('Payment successful! You have 10 tries to play.');
         } catch (txError) {
             console.error('Transaction error:', txError);
