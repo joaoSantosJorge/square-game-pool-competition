@@ -710,6 +710,12 @@
                 showToast('Sending transaction...');
                 await contract.methods.setPlayCost(costInUnits).send({ from: userAccount });
                 showToast('Play cost updated successfully!');
+
+                // Broadcast to other tabs via PlayCostManager
+                if (typeof PlayCostManager !== 'undefined') {
+                    PlayCostManager.setPlayCost(costInUnits);
+                }
+
                 document.getElementById('current-play-cost').textContent = `${newCost} USDC`;
             } catch (error) {
                 console.error('Set play cost error:', error);

@@ -141,7 +141,7 @@
             <h2>🎮 How to Play</h2>
             <ol>
                 <li><strong>Connect Your Wallet:</strong> Connect using MetaMask, WalletConnect, or Coinbase Wallet to participate</li>
-                <li><strong>Purchase Tries:</strong> Pay <span class="highlight">0.02 USDC</span> to receive <span class="highlight">10 game tries</span></li>
+                <li><strong>Purchase Tries:</strong> Pay <span class="highlight"><span class="play-cost-display">0.02</span> USDC</span> to receive <span class="highlight">10 game tries</span></li>
                 <li><strong>Play & Score:</strong> Navigate the square through pipes to achieve the highest score possible</li>
                 <li><strong>Compete:</strong> Your best score is automatically submitted to the monthly leaderboard</li>
                 <li><strong>Win Prizes:</strong> Top players share the prize pool at the end of each cycle</li>
@@ -168,7 +168,7 @@
             <h3>Pool Accumulation</h3>
             <p>The prize pool grows from:</p>
             <ul>
-                <li>Player entry fees (<span class="highlight">0.02 USDC</span> per 10 tries)</li>
+                <li>Player entry fees (<span class="highlight"><span class="play-cost-display">0.02</span> USDC</span> per 10 tries)</li>
                 <li>Direct donations to the contract</li>
                 <li>Unclaimed rewards from previous cycles (if not claimed within 7 days)</li>
             </ul>
@@ -220,9 +220,9 @@
 
             <div class="example-box">
                 <h3>📊 Real Example</h3>
-                <p><strong>Scenario:</strong> 500 players each paid 0.02 USDC to play</p>
+                <p><strong>Scenario:</strong> 500 players each paid <span class="play-cost-display">0.02</span> USDC to play</p>
                 <ul>
-                    <li>Total Pool: 500 × 0.02 = <span class="highlight">10 USDC</span></li>
+                    <li>Total Pool: 500 × <span class="play-cost-display">0.02</span> = <span class="highlight">10 USDC</span></li>
                     <li>1st Place: 4.00 USDC (40%)</li>
                     <li>2nd Place: 2.50 USDC (25%)</li>
                     <li>3rd Place: 1.50 USDC (15%)</li>
@@ -301,6 +301,11 @@
             <p>Yes! All prize distributions happen through a public smart contract on the blockchain. You can verify all transactions and allocations.</p>
         </div>
     </div>
+
+    <!-- Load Web3 for PlayCostManager -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <!-- Centralized config with PlayCostManager -->
+    <script src="js/config.js"></script>
 
     <script>
         // Theme toggle functionality

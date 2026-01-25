@@ -386,7 +386,7 @@ async function payToPlay() {
         // Base Sepolia testnet addresses (from centralized config)
         const usdcAddress = CONFIG.USDC_ADDRESS;
         const flappyBirdContractAddress = CONFIG.CONTRACT_ADDRESS;
-        const amount = CONFIG.PLAY_COST;
+        const amount = PlayCostManager.getPlayCost();
 
         const usdcAbi = [
             {
@@ -447,7 +447,7 @@ async function payToPlay() {
                     },
                     body: JSON.stringify({
                         walletAddress: userAccount,
-                        amountUSDC: 0.02,
+                        amountUSDC: PlayCostManager.getPlayCostUSDC(),
                         transactionHash: tx.transactionHash
                     })
                 });

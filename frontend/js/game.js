@@ -241,7 +241,7 @@ function showGameOverPopup() {
             if (typeof payToPlay === 'function') {
                 await payToPlay();
             } else {
-                alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+                alert(`You have no tries remaining. Please pay ${PlayCostManager.getPlayCostDisplay()} USDC for 10 more tries!`);
             }
             return;
         }
@@ -250,7 +250,7 @@ function showGameOverPopup() {
             if (typeof payToPlay === 'function') {
                 await payToPlay();
             } else {
-                alert('Please pay 0.02 USDC to play the game!');
+                alert(`Please pay ${PlayCostManager.getPlayCostDisplay()} USDC to play the game!`);
             }
             return;
         }
@@ -326,11 +326,11 @@ function resetGame() {
 document.getElementById('start-btn').addEventListener('click', () => {
     // Check if user has paid and has tries remaining
     if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
-        alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+        alert(`You have no tries remaining. Please pay ${PlayCostManager.getPlayCostDisplay()} USDC for 10 more tries!`);
         return;
     }
     if (typeof hasPaid !== 'undefined' && !hasPaid) {
-        alert('Please pay 0.02 USDC to play the game!');
+        alert(`Please pay ${PlayCostManager.getPlayCostDisplay()} USDC to play the game!`);
         return;
     }
     
@@ -361,11 +361,11 @@ canvas.addEventListener('click', () => {
     if (gameOver) {
         // Check if user has paid and has tries remaining before allowing restart
         if (typeof triesRemaining !== 'undefined' && triesRemaining <= 0) {
-            alert('You have no tries remaining. Please pay 0.02 USDC for 10 more tries!');
+            alert(`You have no tries remaining. Please pay ${PlayCostManager.getPlayCostDisplay()} USDC for 10 more tries!`);
             return;
         }
         if (typeof hasPaid !== 'undefined' && !hasPaid) {
-            alert('Please pay 0.02 USDC to play the game!');
+            alert(`Please pay ${PlayCostManager.getPlayCostDisplay()} USDC to play the game!`);
             return;
         }
         
