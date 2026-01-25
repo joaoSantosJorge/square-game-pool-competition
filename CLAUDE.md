@@ -287,6 +287,7 @@ For detailed information, see these docs in `/docs/`:
 
 | Document | Contents |
 |----------|----------|
+| `BACKEND_FUNCTIONS.md` | Comprehensive Cloud Functions reference - endpoints, helpers, cycle end flow |
 | `SYSTEM_DIAGRAMS.md` | Visual architecture diagrams (Mermaid) - component, sequence, state, activity diagrams |
 | `CONTRACT_ADDRESS_REFERENCES.md` | Complete list of where contract addresses are referenced |
 | `DATABASE_PERMISSIONS.md` | Detailed Firestore security rules and access patterns |
