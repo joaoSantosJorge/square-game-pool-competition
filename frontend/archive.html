@@ -179,10 +179,217 @@
             font-size: 14px;
             cursor: pointer;
         }
+
+        /* ========================= */
+        /* MOBILE UI - Hidden by default */
+        /* ========================= */
+        .mobile-header,
+        .mobile-nav-dropdown {
+            display: none;
+        }
+
+        /* ========================= */
+        /* MOBILE BREAKPOINT (< 768px) */
+        /* ========================= */
+        @media (max-width: 768px) {
+            /* Hide desktop elements */
+            .nav-header {
+                display: none !important;
+            }
+
+            /* Show mobile elements */
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 0;
+                margin-bottom: 15px;
+            }
+
+            .mobile-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--fg);
+                font-family: 'Courier New', monospace;
+            }
+
+            .hamburger-btn {
+                background: var(--button-bg);
+                border: 2px solid var(--button-border);
+                color: var(--button-fg);
+                font-size: 20px;
+                padding: 6px 10px;
+                cursor: pointer;
+                width: auto;
+                margin: 0;
+            }
+
+            .mobile-nav-dropdown {
+                display: none;
+                flex-direction: column;
+                background: var(--leaderboard-bg);
+                border: 2px solid var(--border);
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+
+            .mobile-nav-dropdown.open {
+                display: flex;
+            }
+
+            .mobile-nav-dropdown a,
+            .mobile-nav-dropdown button {
+                padding: 12px;
+                text-decoration: none;
+                color: var(--fg);
+                border-bottom: 1px dashed var(--border);
+                font-size: 14px;
+                text-align: left;
+                background: transparent;
+                width: 100%;
+                margin: 0;
+                font-family: 'Courier New', monospace;
+            }
+
+            .mobile-nav-dropdown a:last-child,
+            .mobile-nav-dropdown button:last-child {
+                border-bottom: none;
+            }
+
+            /* Reduce container padding */
+            .archive-container {
+                padding: 10px;
+            }
+
+            /* Stats grid adjustments */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            /* Cycle card adjustments */
+            .cycle-card {
+                padding: 15px;
+            }
+
+            .cycle-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .cycle-title {
+                font-size: 16px;
+            }
+
+            .cycle-info {
+                font-size: 12px;
+            }
+
+            .cycle-pool {
+                font-size: 14px;
+            }
+
+            /* Table adjustments */
+            .winners-table {
+                font-size: 12px;
+            }
+
+            .winners-table th,
+            .winners-table td {
+                padding: 8px;
+            }
+
+            .winners-table th {
+                font-size: 11px;
+            }
+
+            .wallet-address {
+                font-size: 11px;
+            }
+
+            /* Filter controls */
+            .filter-controls select {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .loading-message, .no-data-message {
+                font-size: 14px;
+                padding: 20px;
+            }
+        }
+
+        /* ========================= */
+        /* SMALL PHONES (< 400px) */
+        /* ========================= */
+        @media (max-width: 400px) {
+            .mobile-title {
+                font-size: 14px;
+            }
+
+            .hamburger-btn {
+                font-size: 18px;
+                padding: 4px 8px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .cycle-title {
+                font-size: 14px;
+            }
+
+            .cycle-pool {
+                font-size: 12px;
+            }
+
+            .winners-table th,
+            .winners-table td {
+                padding: 6px;
+                font-size: 11px;
+            }
+
+            .wallet-address {
+                font-size: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="archive-container">
+        <!-- Mobile header with hamburger -->
+        <div class="mobile-header">
+            <span class="mobile-title">ARCHIVE</span>
+            <button class="hamburger-btn" id="hamburger-btn">&#9776;</button>
+        </div>
+
+        <!-- Mobile nav dropdown -->
+        <div class="mobile-nav-dropdown" id="mobile-nav">
+            <button id="toggle-mode-mobile">Toggle Theme</button>
+            <a href="/">Home</a>
+            <a href="game">Play Game</a>
+            <a href="rules">Rules</a>
+            <a href="#" id="profile-link-mobile">Profile</a>
+        </div>
+
         <div class="nav-header">
             <h1>📊 LEADERBOARD ARCHIVE</h1>
             <div class="nav-links">
@@ -463,6 +670,38 @@
             } else {
                 alert('Please connect your wallet first to view your profile.');
             }
+        });
+
+        // ========================
+        // MOBILE UI FUNCTIONALITY
+        // ========================
+
+        // Hamburger menu toggle
+        document.getElementById('hamburger-btn').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.toggle('open');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-nav-dropdown a, .mobile-nav-dropdown button')
+            .forEach(el => {
+                el.addEventListener('click', () => {
+                    document.getElementById('mobile-nav').classList.remove('open');
+                });
+            });
+
+        // Mobile profile link handler
+        document.getElementById('profile-link-mobile').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+                window.location.href = `profile?wallet=${window.ethereum.selectedAddress}`;
+            } else {
+                alert('Please connect your wallet first to view your profile.');
+            }
+        });
+
+        // Mobile theme toggle
+        document.getElementById('toggle-mode-mobile').addEventListener('click', function() {
+            document.getElementById('toggle-mode-btn').click();
         });
     </script>
 </body>

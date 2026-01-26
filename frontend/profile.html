@@ -261,10 +261,275 @@
             cursor: not-allowed;
             opacity: 0.7;
         }
+
+        /* ========================= */
+        /* MOBILE UI - Hidden by default */
+        /* ========================= */
+        .mobile-header,
+        .mobile-nav-dropdown {
+            display: none;
+        }
+
+        /* ========================= */
+        /* MOBILE BREAKPOINT (< 768px) */
+        /* ========================= */
+        @media (max-width: 768px) {
+            /* Hide desktop elements */
+            .nav-header {
+                display: none !important;
+            }
+
+            /* Show mobile elements */
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 0;
+                margin-bottom: 15px;
+            }
+
+            .mobile-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--fg);
+                font-family: 'Courier New', monospace;
+            }
+
+            .hamburger-btn {
+                background: var(--button-bg);
+                border: 2px solid var(--button-border);
+                color: var(--button-fg);
+                font-size: 20px;
+                padding: 6px 10px;
+                cursor: pointer;
+                width: auto;
+                margin: 0;
+            }
+
+            .mobile-nav-dropdown {
+                display: none;
+                flex-direction: column;
+                background: var(--leaderboard-bg);
+                border: 2px solid var(--border);
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+
+            .mobile-nav-dropdown.open {
+                display: flex;
+            }
+
+            .mobile-nav-dropdown a,
+            .mobile-nav-dropdown button {
+                padding: 12px;
+                text-decoration: none;
+                color: var(--fg);
+                border-bottom: 1px dashed var(--border);
+                font-size: 14px;
+                text-align: left;
+                background: transparent;
+                width: 100%;
+                margin: 0;
+                font-family: 'Courier New', monospace;
+            }
+
+            .mobile-nav-dropdown a:last-child,
+            .mobile-nav-dropdown button:last-child {
+                border-bottom: none;
+            }
+
+            /* Reduce container padding */
+            .profile-container {
+                padding: 10px;
+            }
+
+            /* Stats grid adjustments */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            /* Wallet header adjustments */
+            .wallet-header {
+                padding: 15px;
+            }
+
+            .wallet-address {
+                font-size: 12px;
+            }
+
+            .wallet-status {
+                font-size: 12px;
+            }
+
+            /* Section card adjustments */
+            .section-card {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            /* Cycle history adjustments */
+            .cycle-history-item {
+                padding: 12px;
+                grid-template-columns: 1fr;
+            }
+
+            .cycle-info {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .cycle-detail {
+                font-size: 12px;
+            }
+
+            .cycle-detail-label {
+                font-size: 10px;
+            }
+
+            .cycle-name {
+                font-size: 14px;
+            }
+
+            /* Share section adjustments */
+            .section-card[style*="text-align: center"] {
+                padding: 20px !important;
+            }
+
+            .section-card[style*="text-align: center"] p {
+                font-size: 12px !important;
+            }
+
+            .section-card[style*="text-align: center"] div[style*="display: flex"] {
+                flex-direction: column !important;
+            }
+
+            .section-card[style*="text-align: center"] button {
+                width: 100% !important;
+            }
+
+            /* Wallet connection/error boxes */
+            .wallet-connection,
+            .unauthorized-access {
+                padding: 20px;
+            }
+
+            .wallet-connection h2,
+            .unauthorized-access h2 {
+                font-size: 18px;
+            }
+
+            .wallet-connection p,
+            .unauthorized-access p {
+                font-size: 13px;
+            }
+
+            .connect-wallet-btn {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            .loading-message, .error-message, .no-data-message {
+                font-size: 14px;
+                padding: 20px;
+            }
+
+            /* Wallet modal adjustments */
+            #wallet-modal > div {
+                padding: 20px !important;
+            }
+
+            #wallet-modal h2 {
+                font-size: 18px !important;
+            }
+
+            .wallet-option {
+                padding: 12px !important;
+            }
+
+            .wallet-option img {
+                width: 32px !important;
+                height: 32px !important;
+            }
+        }
+
+        /* ========================= */
+        /* SMALL PHONES (< 400px) */
+        /* ========================= */
+        @media (max-width: 400px) {
+            .mobile-title {
+                font-size: 14px;
+            }
+
+            .hamburger-btn {
+                font-size: 18px;
+                padding: 4px 8px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .wallet-address {
+                font-size: 11px;
+            }
+
+            .section-title {
+                font-size: 14px;
+            }
+
+            .cycle-info {
+                grid-template-columns: 1fr;
+            }
+
+            .cycle-detail {
+                font-size: 11px;
+            }
+
+            .connect-wallet-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="profile-container">
+        <!-- Mobile header with hamburger -->
+        <div class="mobile-header">
+            <span class="mobile-title">PROFILE</span>
+            <button class="hamburger-btn" id="hamburger-btn">&#9776;</button>
+        </div>
+
+        <!-- Mobile nav dropdown -->
+        <div class="mobile-nav-dropdown" id="mobile-nav">
+            <button id="toggle-mode-mobile">Toggle Theme</button>
+            <a href="/">Home</a>
+            <a href="game">Play Game</a>
+            <a href="rules">Rules</a>
+            <a href="archive">Archive</a>
+        </div>
+
         <div class="nav-header">
             <h1>👤 USER PROFILE</h1>
             <div class="nav-links">
@@ -1010,6 +1275,28 @@
         // Store data for share functionality
         let rankData = null;
         let highestScore = 0;
+
+        // ========================
+        // MOBILE UI FUNCTIONALITY
+        // ========================
+
+        // Hamburger menu toggle
+        document.getElementById('hamburger-btn').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.toggle('open');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-nav-dropdown a, .mobile-nav-dropdown button')
+            .forEach(el => {
+                el.addEventListener('click', () => {
+                    document.getElementById('mobile-nav').classList.remove('open');
+                });
+            });
+
+        // Mobile theme toggle
+        document.getElementById('toggle-mode-mobile').addEventListener('click', function() {
+            document.getElementById('toggle-mode-btn').click();
+        });
     </script>
 </body>
 </html>

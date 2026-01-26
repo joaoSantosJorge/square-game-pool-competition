@@ -122,10 +122,184 @@
         .allocation-table td {
             color: var(--fg);
         }
+
+        /* ========================= */
+        /* MOBILE UI - Hidden by default */
+        /* ========================= */
+        .mobile-header,
+        .mobile-nav-dropdown {
+            display: none;
+        }
+
+        /* ========================= */
+        /* MOBILE BREAKPOINT (< 768px) */
+        /* ========================= */
+        @media (max-width: 768px) {
+            /* Hide desktop elements */
+            .nav-header {
+                display: none !important;
+            }
+
+            /* Show mobile elements */
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 0;
+                margin-bottom: 15px;
+            }
+
+            .mobile-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--fg);
+                font-family: 'Courier New', monospace;
+            }
+
+            .hamburger-btn {
+                background: var(--button-bg);
+                border: 2px solid var(--button-border);
+                color: var(--button-fg);
+                font-size: 20px;
+                padding: 6px 10px;
+                cursor: pointer;
+                width: auto;
+                margin: 0;
+            }
+
+            .mobile-nav-dropdown {
+                display: none;
+                flex-direction: column;
+                background: var(--leaderboard-bg);
+                border: 2px solid var(--border);
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+
+            .mobile-nav-dropdown.open {
+                display: flex;
+            }
+
+            .mobile-nav-dropdown a,
+            .mobile-nav-dropdown button {
+                padding: 12px;
+                text-decoration: none;
+                color: var(--fg);
+                border-bottom: 1px dashed var(--border);
+                font-size: 14px;
+                text-align: left;
+                background: transparent;
+                width: 100%;
+                margin: 0;
+                font-family: 'Courier New', monospace;
+            }
+
+            .mobile-nav-dropdown a:last-child,
+            .mobile-nav-dropdown button:last-child {
+                border-bottom: none;
+            }
+
+            /* Reduce container padding */
+            .rules-container {
+                padding: 10px;
+            }
+
+            /* Reduce font sizes */
+            h1 {
+                font-size: 18px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+
+            h3 {
+                font-size: 14px;
+            }
+
+            p, ul, ol {
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .content-box {
+                padding: 15px;
+            }
+
+            /* Table adjustments */
+            .allocation-table th,
+            .allocation-table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .allocation-table th {
+                font-size: 11px;
+            }
+
+            .example-box {
+                padding: 12px;
+            }
+
+            .highlight {
+                font-size: 12px;
+            }
+        }
+
+        /* ========================= */
+        /* SMALL PHONES (< 400px) */
+        /* ========================= */
+        @media (max-width: 400px) {
+            .mobile-title {
+                font-size: 14px;
+            }
+
+            .hamburger-btn {
+                font-size: 18px;
+                padding: 4px 8px;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            h3 {
+                font-size: 13px;
+            }
+
+            p, ul, ol {
+                font-size: 12px;
+            }
+
+            .allocation-table th,
+            .allocation-table td {
+                padding: 6px;
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="rules-container">
+        <!-- Mobile header with hamburger -->
+        <div class="mobile-header">
+            <span class="mobile-title">RULES</span>
+            <button class="hamburger-btn" id="hamburger-btn">&#9776;</button>
+        </div>
+
+        <!-- Mobile nav dropdown -->
+        <div class="mobile-nav-dropdown" id="mobile-nav">
+            <button id="toggle-mode-mobile">Toggle Theme</button>
+            <a href="/">Home</a>
+            <a href="game">Play Game</a>
+            <a href="archive">Archive</a>
+            <a href="#" id="profile-link-mobile">Profile</a>
+        </div>
+
         <div class="nav-header">
             <h1>📜 GAME RULES</h1>
             <div class="nav-links">
@@ -348,6 +522,38 @@
             } else {
                 alert('Please connect your wallet first to view your profile.');
             }
+        });
+
+        // ========================
+        // MOBILE UI FUNCTIONALITY
+        // ========================
+
+        // Hamburger menu toggle
+        document.getElementById('hamburger-btn').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.toggle('open');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-nav-dropdown a, .mobile-nav-dropdown button')
+            .forEach(el => {
+                el.addEventListener('click', () => {
+                    document.getElementById('mobile-nav').classList.remove('open');
+                });
+            });
+
+        // Mobile profile link handler
+        document.getElementById('profile-link-mobile').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+                window.location.href = `profile?wallet=${window.ethereum.selectedAddress}`;
+            } else {
+                alert('Please connect your wallet first to view your profile.');
+            }
+        });
+
+        // Mobile theme toggle
+        document.getElementById('toggle-mode-mobile').addEventListener('click', function() {
+            document.getElementById('toggle-mode-btn').click();
         });
     </script>
 </body>
