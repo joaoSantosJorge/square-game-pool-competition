@@ -737,7 +737,9 @@ exports.recordPayment = functions.https.onRequest(async (req, res) => {
       stats = await updateUserPaymentStats(walletAddress, amountUSDC, cycleName, 0);
     } else {
       // For regular payments: grant configured tries
-      stats = await updateUserPaymentStats(walletAddress, amountUSDC, cycleName, triesPerPaymentConfig);
+      stats = await updateUserPaymentStats(
+          walletAddress, amountUSDC, cycleName, triesPerPaymentConfig,
+      );
       triesGranted = triesPerPaymentConfig;
     }
 
