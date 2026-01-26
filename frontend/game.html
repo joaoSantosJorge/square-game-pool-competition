@@ -353,6 +353,283 @@
             --w3m-border-color: var(--border);
             --w3m-font-family: 'Courier New', Courier, 'Lucida Console', monospace;
         }
+
+        /* ========================= */
+        /* MOBILE UI - Hidden by default */
+        /* ========================= */
+        .game-header-mobile,
+        .mobile-nav-dropdown,
+        .game-actions-mobile,
+        .info-bar-mobile,
+        .leaderboard-mobile,
+        .donate-compact {
+            display: none;
+        }
+
+        /* ========================= */
+        /* MOBILE BREAKPOINT (< 768px) */
+        /* ========================= */
+        @media (max-width: 768px) {
+            .game-page-container {
+                padding: 10px;
+            }
+
+            /* Hide desktop elements on mobile */
+            .page-title,
+            .nav-links,
+            .nav-header,
+            .game-header,
+            .game-stats,
+            .sidebar-section,
+            .controls-info,
+            .controls-header,
+            .donate-section,
+            .game-section > h2 {
+                display: none !important;
+            }
+
+            /* Show mobile elements */
+            .game-header-mobile,
+            .game-actions-mobile,
+            .info-bar-mobile,
+            .leaderboard-mobile,
+            .donate-compact {
+                display: flex;
+            }
+
+            /* === MOBILE HEADER === */
+            .game-header-mobile {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .game-title-mobile {
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--fg);
+                font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            }
+
+            .mobile-stats {
+                display: flex;
+                gap: 6px;
+                flex: 1;
+                justify-content: center;
+            }
+
+            .mobile-stat {
+                font-size: 11px;
+                padding: 4px 8px;
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--fg);
+                font-family: 'Courier New', monospace;
+            }
+
+            /* === HAMBURGER MENU === */
+            .hamburger-btn {
+                background: var(--button-bg);
+                border: 2px solid var(--button-border);
+                color: var(--button-fg);
+                font-size: 20px;
+                padding: 6px 10px;
+                cursor: pointer;
+                width: auto;
+                margin: 0;
+            }
+
+            .mobile-nav-dropdown {
+                display: none;
+                flex-direction: column;
+                background: var(--leaderboard-bg);
+                border: 2px solid var(--border);
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            .mobile-nav-dropdown.open {
+                display: flex;
+            }
+
+            .mobile-nav-dropdown a,
+            .mobile-nav-dropdown button {
+                padding: 12px;
+                text-decoration: none;
+                color: var(--fg);
+                border-bottom: 1px dashed var(--border);
+                font-size: 14px;
+                text-align: left;
+                background: transparent;
+                width: 100%;
+                margin: 0;
+                font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            }
+
+            .mobile-nav-dropdown a:last-child,
+            .mobile-nav-dropdown button:last-child {
+                border-bottom: none;
+            }
+
+            /* === CANVAS === */
+            .canvas-wrapper {
+                margin: 10px 0;
+            }
+
+            #game-canvas {
+                width: 100%;
+                height: auto;
+                border-width: 2px;
+            }
+
+            /* === ACTION BUTTONS === */
+            .game-actions-mobile {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+
+            .game-actions-mobile button {
+                padding: 14px 8px;
+                font-size: 13px;
+                margin: 0;
+            }
+
+            .full-width-mobile {
+                width: 100%;
+                margin: 0 0 10px 0;
+                display: block;
+            }
+
+            /* === INFO BAR === */
+            .info-bar-mobile {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 12px;
+                background: var(--leaderboard-bg);
+                border: 2px solid var(--border);
+                font-size: 13px;
+                margin-bottom: 10px;
+                color: var(--fg);
+                font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            }
+
+            /* === COMPACT DONATE === */
+            .donate-compact {
+                display: block;
+                width: 100%;
+                padding: 12px;
+                font-size: 14px;
+                margin: 0 0 10px 0;
+                background: var(--button-bg);
+                color: var(--button-fg);
+                border: 2px solid var(--button-border);
+                font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+                cursor: pointer;
+            }
+
+            /* === COLLAPSIBLE LEADERBOARD === */
+            .leaderboard-mobile {
+                display: block;
+                border: 2px solid var(--border);
+                padding: 0;
+                background: var(--leaderboard-bg);
+            }
+
+            .leaderboard-mobile summary {
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 14px;
+                padding: 12px;
+                color: var(--fg);
+                list-style: none;
+                font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+            }
+
+            .leaderboard-mobile summary::-webkit-details-marker {
+                display: none;
+            }
+
+            .leaderboard-mobile summary::before {
+                content: '\25B6  ';
+            }
+
+            .leaderboard-mobile[open] summary::before {
+                content: '\25BC  ';
+            }
+
+            .leaderboard-mobile ul {
+                margin: 0;
+                padding: 0 12px 12px;
+                font-size: 12px;
+                list-style: none;
+            }
+
+            .leaderboard-mobile li {
+                padding: 8px 0;
+                border-bottom: 1px dashed var(--border);
+                font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+                color: var(--fg);
+            }
+
+            .leaderboard-mobile li:last-child {
+                border-bottom: none;
+            }
+
+            /* Remove sidebar grid layout */
+            .game-layout {
+                display: block;
+            }
+
+            .game-section {
+                padding: 10px;
+                border: none;
+                box-shadow: none;
+            }
+
+            /* Desktop controls grid - hide individual buttons */
+            .controls-grid {
+                display: none !important;
+            }
+
+            .controls-section {
+                margin-top: 0;
+            }
+        }
+
+        /* ========================= */
+        /* SMALL PHONES (< 400px) */
+        /* ========================= */
+        @media (max-width: 400px) {
+            .game-title-mobile {
+                font-size: 14px;
+            }
+
+            .mobile-stat {
+                font-size: 9px;
+                padding: 3px 5px;
+            }
+
+            .game-actions-mobile button {
+                padding: 12px 6px;
+                font-size: 11px;
+            }
+
+            .hamburger-btn {
+                font-size: 18px;
+                padding: 4px 8px;
+            }
+
+            .info-bar-mobile {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -366,6 +643,25 @@
                 <a href="archive">Archive</a>
                 <a href="#" id="profile-link">Profile</a>
             </div>
+        </div>
+
+        <!-- Mobile: Compact header with inline stats + hamburger -->
+        <div class="game-header-mobile">
+            <span class="game-title-mobile">PLAY</span>
+            <div class="mobile-stats">
+                <span class="mobile-stat"><span id="score-mobile">0</span> pts</span>
+                <span class="mobile-stat"><span id="tries-mobile">0</span> tries</span>
+            </div>
+            <button class="hamburger-btn" id="hamburger-btn">&#9776;</button>
+        </div>
+
+        <!-- Hamburger dropdown menu (hidden by default) -->
+        <div class="mobile-nav-dropdown" id="mobile-nav">
+            <a href="/">Home</a>
+            <a href="rules">Rules</a>
+            <a href="archive">Archive</a>
+            <a href="#" id="profile-link-mobile">Profile</a>
+            <button id="toggle-mode-mobile">Toggle Theme</button>
         </div>
 
         <div class="game-layout">
@@ -408,6 +704,30 @@
                         • Avoid obstacles and survive as long as possible<br>
                         • Your best score is automatically saved to the leaderboard
                     </div>
+
+                    <!-- Mobile: Primary action buttons -->
+                    <div class="game-actions-mobile">
+                        <button id="start-btn-mobile">&#9654; START</button>
+                        <button id="pay-btn-mobile">&#128179; PAY</button>
+                    </div>
+
+                    <!-- Mobile: Connect wallet full-width -->
+                    <button id="connect-wallet-btn-mobile" class="full-width-mobile">&#128279; CONNECT WALLET</button>
+
+                    <!-- Mobile: Compact info bar -->
+                    <div class="info-bar-mobile">
+                        <span>&#128176; <span id="pool-amount-mobile">$0</span></span>
+                        <span>&#9200; <span id="cycle-time-mobile">--</span></span>
+                    </div>
+
+                    <!-- Mobile: Compact donate button -->
+                    <button class="donate-compact" id="donate-btn-mobile">&#127873; Donate to Pool</button>
+
+                    <!-- Mobile: Collapsible leaderboard -->
+                    <details class="leaderboard-mobile">
+                        <summary>Leaderboard</summary>
+                        <ul id="leaderboard-list-mobile"></ul>
+                    </details>
                 </div>
             </div>
 
@@ -555,7 +875,7 @@
         document.getElementById('controls-toggle').addEventListener('click', function() {
             const content = document.getElementById('controls-content');
             const toggle = this.querySelector('.controls-toggle');
-            
+
             content.classList.toggle('collapsed');
             toggle.classList.toggle('collapsed');
         });
@@ -569,5 +889,170 @@
                 alert('Please connect your wallet first to view your profile.');
             }
         });
+
+        // ========================
+        // MOBILE UI FUNCTIONALITY
+        // ========================
+
+        // Hamburger menu toggle
+        document.getElementById('hamburger-btn').addEventListener('click', function() {
+            const nav = document.getElementById('mobile-nav');
+            nav.classList.toggle('open');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-nav-dropdown a, .mobile-nav-dropdown button')
+            .forEach(el => {
+                el.addEventListener('click', () => {
+                    document.getElementById('mobile-nav').classList.remove('open');
+                });
+            });
+
+        // Mobile profile link handler
+        document.getElementById('profile-link-mobile').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof userAccount !== 'undefined' && userAccount) {
+                window.location.href = `profile?wallet=${userAccount}`;
+            } else {
+                alert('Please connect your wallet first to view your profile.');
+            }
+        });
+
+        // Mobile theme toggle
+        document.getElementById('toggle-mode-mobile').addEventListener('click', function() {
+            document.getElementById('toggle-mode-btn').click();
+        });
+
+        // Mobile Start button - trigger desktop start
+        document.getElementById('start-btn-mobile').addEventListener('click', function() {
+            document.getElementById('start-btn').click();
+        });
+
+        // Mobile Pay button - trigger desktop pay
+        document.getElementById('pay-btn-mobile').addEventListener('click', function() {
+            document.getElementById('pay-btn').click();
+        });
+
+        // Mobile Connect Wallet button - trigger desktop connect
+        document.getElementById('connect-wallet-btn-mobile').addEventListener('click', function() {
+            document.getElementById('connect-wallet-btn').click();
+        });
+
+        // Mobile Donate button - opens prompt
+        document.getElementById('donate-btn-mobile').addEventListener('click', function() {
+            const amount = prompt('Enter donation amount in USDC:');
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                // Set the desktop donate amount and trigger donate
+                const donateAmountInput = document.getElementById('donate-amount');
+                if (donateAmountInput) {
+                    donateAmountInput.value = amount;
+                }
+                document.getElementById('donate-btn').click();
+            }
+        });
+
+        // Sync mobile elements with desktop updates
+        // Override updateUI functions to also update mobile elements
+
+        // Create a MutationObserver to sync score and tries
+        const scoreObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    const scoreMobile = document.getElementById('score-mobile');
+                    const scoreDesktop = document.getElementById('score');
+                    if (scoreMobile && scoreDesktop) {
+                        scoreMobile.textContent = scoreDesktop.textContent;
+                    }
+                }
+            });
+        });
+
+        const triesObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    const triesMobile = document.getElementById('tries-mobile');
+                    const triesDesktop = document.getElementById('tries-info');
+                    if (triesMobile && triesDesktop) {
+                        triesMobile.textContent = triesDesktop.textContent;
+                    }
+                }
+            });
+        });
+
+        const poolObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    const poolMobile = document.getElementById('pool-amount-mobile');
+                    const poolDesktop = document.getElementById('pool-amount');
+                    if (poolMobile && poolDesktop) {
+                        poolMobile.textContent = poolDesktop.textContent;
+                    }
+                }
+            });
+        });
+
+        const cycleObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    const cycleMobile = document.getElementById('cycle-time-mobile');
+                    const cycleDesktop = document.getElementById('cycle-time');
+                    if (cycleMobile && cycleDesktop) {
+                        cycleMobile.textContent = cycleDesktop.textContent;
+                    }
+                }
+            });
+        });
+
+        // Start observing desktop elements
+        const scoreDesktop = document.getElementById('score');
+        const triesDesktop = document.getElementById('tries-info');
+        const poolDesktop = document.getElementById('pool-amount');
+        const cycleDesktop = document.getElementById('cycle-time');
+
+        if (scoreDesktop) {
+            scoreObserver.observe(scoreDesktop, { childList: true, characterData: true, subtree: true });
+        }
+        if (triesDesktop) {
+            triesObserver.observe(triesDesktop, { childList: true, characterData: true, subtree: true });
+        }
+        if (poolDesktop) {
+            poolObserver.observe(poolDesktop, { childList: true, characterData: true, subtree: true });
+        }
+        if (cycleDesktop) {
+            cycleObserver.observe(cycleDesktop, { childList: true, characterData: true, subtree: true });
+        }
+
+        // Sync leaderboard to mobile
+        const leaderboardObserver = new MutationObserver(function(mutations) {
+            const desktopList = document.getElementById('leaderboard-list');
+            const mobileList = document.getElementById('leaderboard-list-mobile');
+            if (desktopList && mobileList) {
+                mobileList.innerHTML = desktopList.innerHTML;
+            }
+        });
+
+        const leaderboardDesktop = document.getElementById('leaderboard-list');
+        if (leaderboardDesktop) {
+            leaderboardObserver.observe(leaderboardDesktop, { childList: true, subtree: true });
+        }
+
+        // Update mobile wallet button text when wallet connects
+        const walletBtnObserver = new MutationObserver(function(mutations) {
+            const desktopBtn = document.getElementById('connect-wallet-btn');
+            const mobileBtn = document.getElementById('connect-wallet-btn-mobile');
+            if (desktopBtn && mobileBtn) {
+                // Check if connected by looking at text
+                if (desktopBtn.textContent.includes('Disconnect')) {
+                    mobileBtn.innerHTML = '&#128275; DISCONNECT';
+                } else {
+                    mobileBtn.innerHTML = '&#128279; CONNECT WALLET';
+                }
+            }
+        });
+
+        const walletBtnDesktop = document.getElementById('connect-wallet-btn');
+        if (walletBtnDesktop) {
+            walletBtnObserver.observe(walletBtnDesktop, { childList: true, characterData: true, subtree: true });
+        }
     </script>
 </body>
