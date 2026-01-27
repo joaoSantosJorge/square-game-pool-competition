@@ -252,11 +252,11 @@ cast call 0x5b498d19A03E24b5187d5B71B80b02C437F9cE08 "rewards(address)" YOUR_ADD
 - [x] Setting updates in database
 
 ### 8.6 Force Allocation (Testing)
-- [ ] Click "Force Allocate" (if available)
-- [ ] Allocation transaction executes
-- [ ] Winners receive rewards
-- [ ] Pool resets
-- [ ] New cycle starts
+- [x] Click "Force Allocate" (if available)
+- [x] Allocation transaction executes
+- [x] Winners receive rewards
+- [x] Pool resets
+- [x] New cycle starts
 
 ---
 
@@ -291,14 +291,14 @@ For 3 winners with 10% fee:
 ## 10. Archive Page (archive.html)
 
 ### 10.1 Display
-- [ ] List of past cycles appears
-- [ ] Each cycle shows date range
-- [ ] Click cycle to view leaderboard
+- [x] List of past cycles appears
+- [x] Each cycle shows date range
+- [x] Click cycle to view leaderboard
 
 ### 10.2 Historical Leaderboard
-- [ ] Shows final rankings for selected cycle
-- [ ] Winner addresses displayed
-- [ ] Scores shown
+- [x] Shows final rankings for selected cycle
+- [x] Winner addresses displayed
+- [x] Scores shown
 - [ ] Prize amounts shown (if available)
 
 ---
@@ -330,18 +330,18 @@ For 3 winners with 10% fee:
 ## 12. Error Handling
 
 ### 12.1 Network Errors
-- [ ] RPC error shows user-friendly message
-- [ ] Retry option available
-- [ ] App recovers after network restored
+- [x] RPC error shows user-friendly message
+- [x] Retry option available
+- [] App recovers after network restored
 
 ### 12.2 Transaction Failures
-- [ ] Rejected transaction shows message
-- [ ] Reverted transaction shows reason
-- [ ] User can retry after failure
+- [x] Rejected transaction shows message
+- [x] Reverted transaction shows reason
+- [x] User can retry after failure
 
 ### 12.3 Wrong Network
-- [ ] Prompt to switch to Base Sepolia
-- [ ] One-click network switch works
+- [x] Prompt to switch to Base Sepolia
+- [x] One-click network switch works
 - [ ] App state updates after switch
 
 ### 12.4 Wallet Disconnection
@@ -470,5 +470,5 @@ cast --to-dec $(cast call 0x5b498d19A03E24b5187d5B71B80b02C437F9cE08 "playCost()
 ---
 
 **Last Updated:** January 2026
-**Tester:** _______________
-**Date Tested:** _______________
+**Tester:** joao
+**Date Tested:** 25 January 2026

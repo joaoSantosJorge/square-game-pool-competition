@@ -298,4 +298,10 @@ For detailed information, see these docs in `/docs/`:
 
 ---
 
+
+## Commit and push code notes
+
+If there are changes to the UI, do not forget that there is a web version for computers and for smart-phones. Make both UI are well designed and up to date, before commiting.
+If there are changes or additions in functions, run script to check if deployment will pass or not (ESLint if I am not mistaken)
+
 *Last updated: January 2026*
