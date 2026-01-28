@@ -15,7 +15,7 @@ const db = admin.firestore();
 const KEYSTORE_BASE64 = process.env.KEYSTORE_DATA;
 const KEYSTORE_PASSWORD = process.env.KEYSTORE_PASSWORD;
 const FLAPPY_BIRD_CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-const BASE_RPC_URL = process.env.BASE_RPC_URL || "https://sepolia.base.org";
+const BASE_RPC_URL = process.env.BASE_RPC_URL || "https://mainnet.base.org";
 
 // Default values (used as fallback if Firestore config not found)
 const DEFAULT_CYCLE_DURATION_DAYS = 7;

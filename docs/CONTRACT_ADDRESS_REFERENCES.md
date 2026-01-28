@@ -2,8 +2,8 @@
 
 This document lists all locations where the SquarePrizePool contract address is referenced in the codebase.
 
-**Current Contract Address:** `0x5b498d19A03E24b5187d5B71B80b02C437F9cE08`
-https://sepolia.basescan.org/address/0x5b498d19a03e24b5187d5b71b80b02c437f9ce08
+**Current Contract Address:** `0xDD0BbF48f85f5314C3754cd63103Be927B55986C` (Base Mainnet)
+https://basescan.org/address/0xDD0BbF48f85f5314C3754cd63103Be927B55986C
 
 ---
 
@@ -15,10 +15,10 @@ All frontend files now use a single config file. **To change the contract addres
 
 ```javascript
 const CONFIG = {
-    CONTRACT_ADDRESS: '0x5b498d19A03E24b5187d5B71B80b02C437F9cE08',  // ← Change this
-    USDC_ADDRESS: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
-    CHAIN_ID: 84532,
-    RPC_URL: 'https://sepolia.base.org',
+    CONTRACT_ADDRESS: '0xDD0BbF48f85f5314C3754cd63103Be927B55986C',  // ← Change this (Base Mainnet)
+    USDC_ADDRESS: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',       // USDC on Base Mainnet
+    CHAIN_ID: 8453,
+    RPC_URL: 'https://mainnet.base.org',
     // ... other config
 };
 ```

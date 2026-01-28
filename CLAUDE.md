@@ -121,9 +121,9 @@ flappybird-pool-competition/
 
 ## Smart Contract
 
-### FlappyBirdPrizePool.sol (Deployed)
+### SquarePrizePool.sol (Deployed)
 
-**Address**: `0xDD0BbF48f85f5314C3754cd63103Be927B55986C` (Base Sepolia)
+**Address**: `0xDD0BbF48f85f5314C3754cd63103Be927B55986C` (Base Mainnet)
 
 | Function | Access | Purpose |
 |----------|--------|---------|

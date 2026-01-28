@@ -1,6 +1,6 @@
 # Flappy Bird Competition Prize Pool
 
-A blockchain-based competitive Flappy Bird game with USDC prize pools on Base Sepolia. Players pay to play, compete for high scores, and winners claim rewards through smart contracts.
+A blockchain-based competitive Flappy Bird game with USDC prize pools on Base. Players pay to play, compete for high scores, and winners claim rewards through smart contracts.
 
 **🎮 Live Demo**: [https://flappy-bird-leaderboard-463e0.web.app/](https://flappy-bird-leaderboard-463e0.web.app/)
 
@@ -33,7 +33,7 @@ Each game cycle operates through a smart contract that handles micropayments and
 ### Current Features
 
 - ✅ **Web3 Wallet Integration** - Connect with Coinbase Wallet or MetaMask
-- ✅ **USDC Payments** - Pay-to-play with USDC on Base Sepolia
+- ✅ **USDC Payments** - Pay-to-play with USDC on Base
 - ✅ **Prize Pool System** - Automated prize distribution via smart contract
 - ✅ **Real-time Leaderboard** - Firebase Firestore integration
 - ✅ **Retro UI Design** - Minimalist black/white theme with dark mode toggle
@@ -64,7 +64,7 @@ Each game cycle operates through a smart contract that handles micropayments and
 - **Firebase CLI** (for backend deployment)
 - **Git**
 - **Web3 Wallet** (Coinbase Wallet or MetaMask)
-- **Base Sepolia ETH** (for testing)
+- **Base ETH** (for gas fees)
 
 ## Quick Start
 
@@ -123,24 +123,24 @@ Create `.env` files in appropriate directories:
 **Root `.env` (for contract deployment)**:
 ```env
 PRIVATE_KEY=your_private_key
-BASE_SEPOLIA_RPC_URL=your_rpc_url
+BASE_RPC_URL=https://mainnet.base.org
 ```
 
 **`functions/.env` (for backend)**:
 ```env
 FIREBASE_SERVICE_ACCOUNT=path_to_service_account.json
-CONTRACT_ADDRESS=0xdd0bbf48f85f5314c3754cd63103be927b55986c
+CONTRACT_ADDRESS=0xDD0BbF48f85f5314C3754cd63103Be927B55986C
 ```
 
 See [docs/SECRET_KEY_MANAGEMENT.md](docs/SECRET_KEY_MANAGEMENT.md) for details.
 
 ## Smart Contract
 
-### Deployed Contract (Base Sepolia)
+### Deployed Contract (Base Mainnet)
 
-- **Address**: `0xdd0bbf48f85f5314c3754cd63103be927b55986c`
-- **Explorer**: [View on BaseScan](https://sepolia.basescan.org/address/0xdd0bbf48f85f5314c3754cd63103be927b55986c)
-- **Network**: Base Sepolia Testnet
+- **Address**: `0xDD0BbF48f85f5314C3754cd63103Be927B55986C`
+- **Explorer**: [View on BaseScan](https://basescan.org/address/0xDD0BbF48f85f5314C3754cd63103Be927B55986C)
+- **Network**: Base Mainnet
 - **Owner**: 0x87B3Fb6381EdC7B9Ae89540B5764f2a75C36A31B
 
 ### Key Functions
@@ -196,7 +196,7 @@ The project uses a **monorepo structure** with three main layers:
 
 ### 1. Smart Contracts (`contracts/`)
 - Solidity contracts handling payments, prize pools, and rewards
-- Deployed on Base Sepolia testnet
+- Deployed on Base Mainnet
 - Tested with Foundry
 
 ### 2. Backend (`functions/`)
@@ -269,4 +269,4 @@ flappybird-pool-competition/
 
 ---
 
-**⚠️ Testnet Only**: This project is currently deployed on Base Sepolia testnet. Do not use with real funds on mainnet without thorough auditing.
+**🚀 Production**: This project is deployed on Base Mainnet. Play responsibly with real funds.

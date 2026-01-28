@@ -459,7 +459,7 @@
     <script>
         // Configuration (from centralized config)
         const CONTRACT_ADDRESS = CONFIG.CONTRACT_ADDRESS;
-        const BASE_SEPOLIA_RPC = CONFIG.RPC_URL;
+        const BASE_RPC = CONFIG.RPC_URL;
         const FIREBASE_FUNCTIONS_URL = CONFIG.FIREBASE_FUNCTIONS_URL;
         
         // Firebase config (from centralized config)
@@ -572,10 +572,10 @@
                 // Initialize Web3
                 web3 = new Web3(window.ethereum);
                 
-                // Check network
+                // Check network (Base Mainnet)
                 const chainId = await web3.eth.getChainId();
-                if (chainId !== 84532n) {
-                    throw new Error('Please switch to Base Sepolia network (Chain ID: 84532)');
+                if (chainId !== 8453n) {
+                    throw new Error('Please switch to Base network (Chain ID: 8453)');
                 }
 
                 // Get contract owner

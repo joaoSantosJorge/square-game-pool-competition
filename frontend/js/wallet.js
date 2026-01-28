@@ -20,7 +20,7 @@ const WalletManager = (function() {
     
     // Configuration
     const WALLETCONNECT_PROJECT_ID = '9f6e9a1e6f5f0f8e7bec54e6ef95fa4d';
-    const SUPPORTED_CHAINS = ['eip155:84532'];
+    const SUPPORTED_CHAINS = ['eip155:8453'];
     const SUPPORTED_METHODS = ['eth_sendTransaction', 'personal_sign', 'eth_sign', 'eth_signTypedData_v4'];
     const SUPPORTED_EVENTS = ['chainChanged', 'accountsChanged'];
     
@@ -377,7 +377,7 @@ const WalletManager = (function() {
 
     // Create WalletConnect provider wrapper
     function createWalletConnectProvider(signClient, session) {
-        const rpcUrl = typeof CONFIG !== 'undefined' ? CONFIG.RPC_URL : 'https://sepolia.base.org';
+        const rpcUrl = typeof CONFIG !== 'undefined' ? CONFIG.RPC_URL : 'https://mainnet.base.org';
         
         const wcProviderObj = {
             signClient,
@@ -400,7 +400,7 @@ const WalletManager = (function() {
                     }
                     
                     if (method === 'eth_chainId') {
-                        return '0x14a34'; // Base Sepolia
+                        return '0x2105'; // Base Mainnet
                     }
                     
                     if (method === 'eth_getTransactionReceipt' || method === 'eth_blockNumber' || method === 'eth_getBalance') {
@@ -422,7 +422,7 @@ const WalletManager = (function() {
                     return await withTimeout(
                         signClient.request({
                             topic: session.topic,
-                            chainId: 'eip155:84532',
+                            chainId: 'eip155:8453',
                             request: { method, params: params || [] }
                         }),
                         30000,
@@ -722,7 +722,7 @@ const WalletManager = (function() {
 
         // Try each provider, preferring ones on the correct chain
         let bestMatch = null;
-        const targetChainId = typeof CONFIG !== 'undefined' ? CONFIG.CHAIN_ID : 84532;
+        const targetChainId = typeof CONFIG !== 'undefined' ? CONFIG.CHAIN_ID : 8453;
 
         for (const { name, provider: testProvider } of providers) {
             try {

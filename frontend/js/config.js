@@ -2,14 +2,14 @@
 // Update this file when deploying to a new contract
 
 const CONFIG = {
-    // Smart Contract Addresses
-    CONTRACT_ADDRESS: '0x5b498d19A03E24b5187d5B71B80b02C437F9cE08',
-    USDC_ADDRESS: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+    // Smart Contract Addresses (Base Mainnet)
+    CONTRACT_ADDRESS: '0xDD0BbF48f85f5314C3754cd63103Be927B55986C',
+    USDC_ADDRESS: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
 
-    // Network Configuration
-    CHAIN_ID: 84532,
-    CHAIN_NAME: 'Base Sepolia',
-    RPC_URL: 'https://sepolia.base.org',
+    // Network Configuration (Base Mainnet)
+    CHAIN_ID: 8453,
+    CHAIN_NAME: 'Base',
+    RPC_URL: 'https://mainnet.base.org',
 
     // Firebase Configuration
     FIREBASE_FUNCTIONS_URL: 'https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net',

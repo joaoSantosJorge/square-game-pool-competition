@@ -184,7 +184,7 @@ exports.resetContractCycle = functions.https.onRequest(async (req, res) => {
     const KEYSTORE_BASE64 = process.env.KEYSTORE_DATA;
     const KEYSTORE_PASSWORD = process.env.KEYSTORE_PASSWORD;
     const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-    const BASE_RPC_URL = process.env.BASE_RPC_URL || "https://sepolia.base.org";
+    const BASE_RPC_URL = process.env.BASE_RPC_URL || "https://mainnet.base.org";
 
     if (!KEYSTORE_BASE64 || !KEYSTORE_PASSWORD || !CONTRACT_ADDRESS) {
       throw new Error("Missing required environment variables");

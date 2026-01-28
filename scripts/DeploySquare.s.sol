@@ -9,8 +9,8 @@ contract DeploySquareScript is Script {
         // Get the deployer's private key from environment variable
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
-        // Get USDC address from environment variable or use default Base Sepolia USDC
-        address usdcAddress = vm.envOr("USDC_ADDRESS", address(0x036CbD53842c5426634e7929541eC2318f3dCF7e));
+        // Get USDC address from environment variable or use default Base Mainnet USDC
+        address usdcAddress = vm.envOr("USDC_ADDRESS", address(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913));
 
         console.log("Deploying SquarePrizePool...");
         console.log("Deployer address:", vm.addr(deployerPrivateKey));
@@ -36,11 +36,6 @@ contract DeploySquareScript is Script {
         console.log("2. functions/.env (CONTRACT_ADDRESS)");
         console.log("");
         console.log("Verify on BaseScan with:");
-        console.log("forge verify-contract");
-        console.log(address(pool));
-        console.log("contracts/SquarePrizePool.sol:SquarePrizePool");
-        console.log("--chain-id 84532");
-        console.log("--constructor-args");
-        console.log(usdcAddress);
+        console.log("forge verify-contract <ADDRESS> contracts/SquarePrizePool.sol:SquarePrizePool --chain-id 8453 --constructor-args $(cast abi-encode 'constructor(address)' <USDC_ADDRESS>)");
     }
 }

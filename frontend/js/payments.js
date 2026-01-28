@@ -11,7 +11,7 @@ let paymentInProgress = false; // Track if payment is currently processing
 
 // Contract addresses (from centralized config)
 const FLAPPY_BIRD_CONTRACT_ADDRESS = CONFIG.CONTRACT_ADDRESS;
-const BASE_SEPOLIA_RPC = CONFIG.RPC_URL;
+const BASE_RPC = CONFIG.RPC_URL;
 
 // Update prize pool display
 async function updatePrizePool() {
@@ -29,7 +29,7 @@ async function updatePrizePool() {
         }
 
         // Create a Web3 instance for reading (doesn't require wallet connection)
-        const readWeb3 = new Web3(BASE_SEPOLIA_RPC);
+        const readWeb3 = new Web3(BASE_RPC);
         
         const contractABI = [
             {
@@ -123,7 +123,7 @@ async function updateClaimButton() {
         // Final fallback to read-only RPC verification
         if (chainId === null) {
             try {
-                const readWeb3 = new Web3(BASE_SEPOLIA_RPC);
+                const readWeb3 = new Web3(BASE_RPC);
                 const rpcChainId = await readWeb3.eth.getChainId();
                 chainId = Number(rpcChainId);
                 chainSource = 'rpc-fallback';
@@ -132,19 +132,19 @@ async function updateClaimButton() {
             }
         }
         
-        console.log('Chain ID check:', { chainId, chainSource, expected: 84532 });
-        
-        // Check if on correct network
-        if (chainId !== 84532) {
+        console.log('Chain ID check:', { chainId, chainSource, expected: 8453 });
+
+        // Check if on correct network (Base Mainnet)
+        if (chainId !== 8453) {
             claimBtn.disabled = true;
             
             // Provide specific guidance based on detected chain
             if (chainId === 1) {
                 claimBtn.textContent = 'Wrong Network (Ethereum)';
-                console.warn('User is on Ethereum Mainnet but app requires Base Sepolia');
-            } else if (chainId === 8453) {
-                claimBtn.textContent = 'Wrong Network (Base Mainnet)';
-                console.warn('User is on Base Mainnet but app requires Base Sepolia');
+                console.warn('User is on Ethereum Mainnet but app requires Base');
+            } else if (chainId === 84532) {
+                claimBtn.textContent = 'Wrong Network (Base Sepolia)';
+                console.warn('User is on Base Sepolia but app requires Base Mainnet');
             } else if (chainId === 137) {
                 claimBtn.textContent = 'Wrong Network (Polygon)';
             } else {
@@ -154,7 +154,7 @@ async function updateClaimButton() {
         }
         
         // Check if user has rewards to claim - use read-only RPC for reliability
-        const readWeb3 = new Web3(BASE_SEPOLIA_RPC);
+        const readWeb3 = new Web3(BASE_RPC);
         const contractABI = [
             {
                 "inputs": [{"name": "", "type": "address"}],
@@ -303,7 +303,6 @@ async function payToPlay() {
 
     paymentInProgress = true;
 
-    // TODO: Switch to Base Mainnet when going to production
     // Base Mainnet: chainId 8453 (0x2105), USDC: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
 
     const payBtn = document.getElementById('pay-btn');
@@ -315,16 +314,16 @@ async function payToPlay() {
             payBtn.textContent = 'Checking network...';
         }
         
-        // Check if on Base Sepolia testnet (chain ID 84532)
-        let chainId = 84532;
+        // Check if on Base Mainnet (chain ID 8453)
+        let chainId = 8453;
         try {
             chainId = Number(await web3.eth.getChainId());
         } catch (e) {
             console.warn('Could not get chain ID:', e.message);
         }
-        
-        if (chainId !== 84532) {
-            console.log('Current chain ID:', chainId, 'Expected: 84532');
+
+        if (chainId !== 8453) {
+            console.log('Current chain ID:', chainId, 'Expected: 8453');
             
             // Detect wallet type
             const isPhantom = window.phantom?.ethereum?.isPhantom || window.ethereum?.isPhantom;
@@ -333,7 +332,7 @@ async function payToPlay() {
             if (isPhantom) {
                 // Phantom wallet - show manual switch instructions
                 console.log('Phantom wallet detected');
-                alert('Please switch to the Base Sepolia network in your Phantom wallet.\n\n1. Click the network selector in Phantom\n2. Select "Base Sepolia"\n3. Then try again');
+                alert('Please switch to the Base network in your Phantom wallet.\n\n1. Click the network selector in Phantom\n2. Select "Base"\n3. Then try again');
                 if (payBtn) payBtn.textContent = originalText;
                 if (payBtn) payBtn.disabled = false;
                 paymentInProgress = false;
@@ -344,10 +343,10 @@ async function payToPlay() {
                     if (payBtn) payBtn.textContent = 'Switching network...';
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x14a34' }], // Base Sepolia chain ID
+                        params: [{ chainId: '0x2105' }], // Base Mainnet chain ID
                     });
                     // Network switched successfully, continue with payment
-                    console.log('Successfully switched to Base Sepolia');
+                    console.log('Successfully switched to Base');
                 } catch (switchError) {
                     // If network not added, add it
                     if (switchError.code === 4902) {
@@ -355,17 +354,17 @@ async function payToPlay() {
                             await window.ethereum.request({
                                 method: 'wallet_addEthereumChain',
                                 params: [{
-                                    chainId: '0x14a34',
-                                    chainName: 'Base Sepolia',
+                                    chainId: '0x2105',
+                                    chainName: 'Base',
                                     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                                    rpcUrls: ['https://sepolia.base.org'],
-                                    blockExplorerUrls: ['https://sepolia.basescan.org'],
+                                    rpcUrls: ['https://mainnet.base.org'],
+                                    blockExplorerUrls: ['https://basescan.org'],
                                 }],
                             });
-                            console.log('Successfully added and switched to Base Sepolia');
+                            console.log('Successfully added and switched to Base');
                         } catch (addError) {
-                            console.error('Failed to add Base Sepolia network:', addError);
-                            alert('Failed to add Base Sepolia network. Please add it manually in your wallet settings.');
+                            console.error('Failed to add Base network:', addError);
+                            alert('Failed to add Base network. Please add it manually in your wallet settings.');
                             if (payBtn) payBtn.textContent = originalText;
                             if (payBtn) payBtn.disabled = false;
                             paymentInProgress = false;
@@ -379,8 +378,8 @@ async function payToPlay() {
                         paymentInProgress = false;
                         return;
                     } else {
-                        console.error('Failed to switch to Base Sepolia network:', switchError);
-                        alert('Please switch to Base Sepolia testnet manually in your wallet');
+                        console.error('Failed to switch to Base network:', switchError);
+                        alert('Please switch to Base network manually in your wallet');
                         if (payBtn) payBtn.textContent = originalText;
                         if (payBtn) payBtn.disabled = false;
                         paymentInProgress = false;
@@ -388,7 +387,7 @@ async function payToPlay() {
                     }
                 }
             } else {
-                alert('Please switch to Base Sepolia testnet in your wallet');
+                alert('Please switch to Base network in your wallet');
                 if (payBtn) payBtn.textContent = originalText;
                 if (payBtn) payBtn.disabled = false;
                 paymentInProgress = false;
@@ -396,7 +395,7 @@ async function payToPlay() {
             }
         }
 
-        // Base Sepolia testnet addresses (from centralized config)
+        // Base Mainnet addresses (from centralized config)
         const usdcAddress = CONFIG.USDC_ADDRESS;
         const flappyBirdContractAddress = CONFIG.CONTRACT_ADDRESS;
         const amount = PlayCostManager.getPlayCost();
@@ -531,44 +530,44 @@ async function donate() {
     // Convert USDC amount to token units (6 decimals)
     const donateAmountInTokenUnits = Math.floor(donateAmount * 1000000);
 
-    // Check if on Base Sepolia testnet (chain ID 84532)
+    // Check if on Base Mainnet (chain ID 8453)
     const chainId = await web3.eth.getChainId();
-    if (chainId !== 84532) {
-        console.log('Current chain ID:', chainId, 'Expected: 84532');
+    if (chainId !== 8453) {
+        console.log('Current chain ID:', chainId, 'Expected: 8453');
         if (window.ethereum) {
             try {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x14a34' }],
+                    params: [{ chainId: '0x2105' }],
                 });
-                console.log('Successfully switched to Base Sepolia');
+                console.log('Successfully switched to Base');
             } catch (switchError) {
                 if (switchError.code === 4902) {
                     try {
                         await window.ethereum.request({
                             method: 'wallet_addEthereumChain',
                             params: [{
-                                chainId: '0x14a34',
-                                chainName: 'Base Sepolia',
+                                chainId: '0x2105',
+                                chainName: 'Base',
                                 nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                                rpcUrls: ['https://sepolia.base.org'],
-                                blockExplorerUrls: ['https://sepolia.basescan.org'],
+                                rpcUrls: ['https://mainnet.base.org'],
+                                blockExplorerUrls: ['https://basescan.org'],
                             }],
                         });
-                        console.log('Successfully added and switched to Base Sepolia');
+                        console.log('Successfully added and switched to Base');
                     } catch (addError) {
-                        console.error('Failed to add Base Sepolia network:', addError);
-                        alert('Failed to add Base Sepolia network. Please add it manually.');
+                        console.error('Failed to add Base network:', addError);
+                        alert('Failed to add Base network. Please add it manually.');
                         return;
                     }
                 } else {
-                    console.error('Failed to switch to Base Sepolia network:', switchError);
-                    alert('Please switch to Base Sepolia testnet manually in your wallet');
+                    console.error('Failed to switch to Base network:', switchError);
+                    alert('Please switch to Base network manually in your wallet');
                     return;
                 }
             }
         } else {
-            alert('Please switch to Base Sepolia testnet in your wallet');
+            alert('Please switch to Base network in your wallet');
             return;
         }
     }

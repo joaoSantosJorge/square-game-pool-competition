@@ -706,7 +706,7 @@
         
         // Contract constants (from centralized config)
         const FLAPPY_BIRD_CONTRACT_ADDRESS = CONFIG.CONTRACT_ADDRESS;
-        const BASE_SEPOLIA_CHAIN_ID = CONFIG.CHAIN_ID;
+        const BASE_CHAIN_ID = CONFIG.CHAIN_ID;
 
         // Theme toggle functionality
         const toggleBtn = document.getElementById('toggle-mode-btn');
@@ -938,11 +938,11 @@
                     console.log('Chain ID from web3 fallback:', chainId);
                 }
 
-                console.log('Wallet Chain ID:', chainId, '(type:', typeof chainId, ') | Expected:', BASE_SEPOLIA_CHAIN_ID, '| Match:', String(chainId) === String(BASE_SEPOLIA_CHAIN_ID));
-                if (String(chainId) !== String(BASE_SEPOLIA_CHAIN_ID)) {
+                console.log('Wallet Chain ID:', chainId, '(type:', typeof chainId, ') | Expected:', BASE_CHAIN_ID, '| Match:', String(chainId) === String(BASE_CHAIN_ID));
+                if (String(chainId) !== String(BASE_CHAIN_ID)) {
                     claimBtn.style.display = 'block';
                     claimBtn.disabled = true;
-                    claimBtn.textContent = 'Switch to Base Sepolia';
+                    claimBtn.textContent = 'Switch to Base';
                     return;
                 }
                 
