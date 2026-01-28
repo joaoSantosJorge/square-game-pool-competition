@@ -75,6 +75,13 @@ const contractABI = [
     "stateMutability": "view",
     "type": "function",
   },
+  {
+    "inputs": [{"name": "winners", "type": "address[]"}],
+    "name": "sweepUnclaimed",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+  },
 ];
 
 // Decrypt keystore from base64
@@ -136,6 +143,21 @@ async function getTopWinners(numberOfWinners) {
   });
 
   return winners;
+}
+
+// Get previous cycle winners from metadata
+async function getPreviousCycleWinners() {
+  const metadataSnapshot = await db.collection("cycleMetadata")
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .get();
+
+  if (metadataSnapshot.empty) {
+    return [];
+  }
+
+  const metadata = metadataSnapshot.docs[0].data();
+  return metadata.winners || [];
 }
 
 // Calculate percentages
@@ -315,11 +337,25 @@ async function allocateFundsToWinners() {
 
   const contract = new web3.eth.Contract(contractABI, FLAPPY_BIRD_CONTRACT_ADDRESS);
 
-  // Check if already allocated
+  // Check if already allocated - if so, sweep unclaimed rewards first
   const alreadyAllocated = await contract.methods.fundsAllocated().call();
   if (alreadyAllocated) {
-    console.log("Funds already allocated for this cycle");
-    return false;
+    console.log("Funds already allocated - sweeping unclaimed rewards first");
+
+    const previousWinners = await getPreviousCycleWinners();
+    const winnerAddresses = previousWinners.map((w) => w.address);
+    console.log("Sweeping", winnerAddresses.length, "previous winners");
+
+    try {
+      const sweepTx = await contract.methods.sweepUnclaimed(winnerAddresses).send({
+        from: account.address,
+        gas: 300000,
+      });
+      console.log("Sweep transaction hash:", sweepTx.transactionHash);
+    } catch (error) {
+      console.error("Sweep failed:", error.message);
+      return false;
+    }
   }
 
   // Get total pool
@@ -496,4 +532,5 @@ exports._testExports = {
   formatDate,
   getCycleState,
   getTopWinners,
+  getPreviousCycleWinners,
 };
