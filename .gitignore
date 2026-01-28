@@ -34,6 +34,7 @@ cache/
 
 # smart contract folders
 lib/
+broadcast/
 
 # Compiler output
 input.json
