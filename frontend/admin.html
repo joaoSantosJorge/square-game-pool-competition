@@ -966,16 +966,17 @@
 
         // Initialize
         document.getElementById('connect-admin-btn').addEventListener('click', connectWallet);
-        
+
         // Auto-connect if wallet param matches
         window.addEventListener('load', () => {
             const urlWallet = getWalletFromURL();
             if (urlWallet) {
-                document.querySelector('.auth-message').innerHTML = 
+                document.querySelector('.auth-message').innerHTML =
                     `<span class="status-indicator status-disconnected" id="status-indicator"></span>
                      Verify ownership for wallet: <strong>${urlWallet.slice(0,6)}...${urlWallet.slice(-4)}</strong>`;
             }
         });
     </script>
+    <script src="js/footer.js"></script>
 </body>
 </html>

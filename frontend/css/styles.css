@@ -253,3 +253,73 @@ h2, #wallet-info {
     color: var(--button-bg) !important;
     box-shadow: 2px 2px 0 var(--button-shadow2), 4px 4px 0 var(--button-shadow1) !important;
 }
+
+/* ========================= */
+/* SITE FOOTER */
+/* ========================= */
+.site-footer {
+    margin-top: 60px;
+    padding: 20px;
+    border-top: 2px dashed var(--border);
+    text-align: center;
+}
+
+.footer-tagline {
+    font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+    color: var(--fg);
+    opacity: 0.7;
+    font-size: 12px;
+    margin: 0 0 10px 0;
+    letter-spacing: 1px;
+}
+
+.footer-creator {
+    font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+    color: var(--fg);
+    opacity: 0.8;
+    font-size: 13px;
+    margin: 0;
+}
+
+.creator-link {
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--fg);
+    transition: opacity 0.2s, border-color 0.2s;
+}
+
+.creator-link:hover {
+    opacity: 1;
+    border-bottom-style: solid;
+}
+
+/* Footer responsive styles */
+@media (max-width: 768px) {
+    .site-footer {
+        margin-top: 40px;
+        padding: 15px 10px;
+    }
+
+    .footer-tagline {
+        font-size: 10px;
+    }
+
+    .footer-creator {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 400px) {
+    .site-footer {
+        margin-top: 30px;
+        padding: 12px 8px;
+    }
+
+    .footer-tagline {
+        font-size: 9px;
+    }
+
+    .footer-creator {
+        font-size: 10px;
+    }
+}
