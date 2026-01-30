@@ -9,7 +9,13 @@ const CONFIG = {
     // Network Configuration (Base Mainnet)
     CHAIN_ID: 8453,
     CHAIN_NAME: 'Base',
-    RPC_URL: 'https://mainnet.base.org',
+    // Primary RPC: Infura (higher rate limits), fallbacks: public endpoints
+    RPC_URL: 'https://base-mainnet.infura.io/v3/ff9e59d594ea4715adcfb87750d57a80',
+    RPC_URLS: [
+        'https://base-mainnet.infura.io/v3/ff9e59d594ea4715adcfb87750d57a80',
+        'https://mainnet.base.org',
+        'https://base.llamarpc.com'
+    ],
 
     // Firebase Configuration
     FIREBASE_FUNCTIONS_URL: 'https://us-central1-flappy-bird-leaderboard-463e0.cloudfunctions.net',
